@@ -2,30 +2,17 @@ package javafx.javafx1;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.css.converter.ColorConverter;
 import javafx.event.ActionEvent;
-import javafx.event.EventTarget;
 import javafx.fxml.FXML;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.control.*;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
-import javafx.scene.text.Font;
-import javafx.scene.text.TextAlignment;
 import javafx.stage.FileChooser;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-
-import java.awt.*;
-import java.awt.TextField;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -33,8 +20,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-
 import javafx.scene.control.cell.PropertyValueFactory;
 
 public class ManageDiaryController extends App
@@ -161,7 +146,6 @@ public class ManageDiaryController extends App
             XSSFWorkbook workbook = new XSSFWorkbook(fs);
             XSSFSheet sheet = workbook.getSheetAt(0);
 
-
             int rows = sheet.getLastRowNum();
             for (int i = 4; i <= rows; i++)
             {
@@ -230,12 +214,11 @@ public class ManageDiaryController extends App
         String lessonName = "Lesson";
 
         Button lessonBtn = new Button(lessonName + " " + count);
-//        lessonBtn.setTextFill(Color.BLACK);
+        lessonBtn.setTextFill(Color.BLACK);
         lessonBtn.setId("lessonBtnTest");
         lessonBtn.setMinSize(260, 55);
         lessonBtn.setPrefSize(200, 55);
-        lessonBtn.setStyle("-fx-background-color: #D9D9D9");
-        lessonBtn.setStyle("-fx-font-size: 20");
+        lessonBtn.setStyle("-fx-background-color: #D9D9D9; -fx-font-size: 20");
 
         lessonBtn.addEventHandler(MouseEvent.MOUSE_CLICKED, this::onMouseClickGetTblCommentsByLessonName);
 
@@ -267,8 +250,7 @@ public class ManageDiaryController extends App
             Button btn = (Button)lessonsContainer.getChildren().get(i);
 
             btn.setTextFill(Color.BLACK);
-            btn.setStyle("-fx-background-color: #D9D9D9");
-            btn.setStyle("-fx-font-size: 20");
+            btn.setStyle("-fx-background-color: #D9D9D9; -fx-font-size: 20");
         }
     }
 
@@ -318,9 +300,8 @@ public class ManageDiaryController extends App
 
             resetAllBtn(countGlobal);
 
-//            btn.setTextFill(Color.WHITE);
-            btn.setStyle("-fx-background-color: #F05454");
-            btn.setStyle("-fx-font-size: 20");
+            btn.setTextFill(Color.WHITE);
+            btn.setStyle("-fx-background-color: #F05454; -fx-font-size: 20");
 
             loadTable1Comment(uploadFile.findLessonByTitle(titleValue));
             loadTable2Comment(uploadFile.findLessonByTitle(titleValue));
@@ -370,10 +351,7 @@ public class ManageDiaryController extends App
         }
         resetAllBtn(countGlobal);
 
-//        btn.setTextFill(Color.WHITE);
-        btn.setStyle("-fx-background-color: #F05454");
-        btn.setStyle("-fx-font-size: 20");
-
-//        System.out.println(countGlobal);
+        btn.setTextFill(Color.WHITE);
+        btn.setStyle("-fx-background-color: #F05454; -fx-font-size: 20");
     }
 }
