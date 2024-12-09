@@ -230,12 +230,14 @@ public class ManageDiaryController extends App
         String lessonName = "Lesson";
 
         Button lessonBtn = new Button(lessonName + " " + count);
+//        lessonBtn.setTextFill(Color.BLACK);
         lessonBtn.setId("lessonBtnTest");
         lessonBtn.setMinSize(260, 55);
         lessonBtn.setPrefSize(200, 55);
-        lessonBtn.setStyle("-fx-background-color: #F05454");
+        lessonBtn.setStyle("-fx-background-color: #D9D9D9");
+        lessonBtn.setStyle("-fx-font-size: 20");
 
-        lessonBtn.addEventHandler(MouseEvent.MOUSE_CLICKED, this::onMouseClickGetTblCommentsByBtnId);
+        lessonBtn.addEventHandler(MouseEvent.MOUSE_CLICKED, this::onMouseClickGetTblCommentsByLessonName);
 
         lessonsContainer.getChildren().add(lessonBtn);
     }
@@ -256,6 +258,18 @@ public class ManageDiaryController extends App
         }
 
         return count;
+    }
+    public void resetAllBtn(int countGlobal)
+    {
+        int tmpCount = countGlobal - 1;
+        for (int i = 0; i < tmpCount; i++)
+        {
+            Button btn = (Button)lessonsContainer.getChildren().get(i);
+
+            btn.setTextFill(Color.BLACK);
+            btn.setStyle("-fx-background-color: #D9D9D9");
+            btn.setStyle("-fx-font-size: 20");
+        }
     }
 
     // Xu ly event
@@ -300,6 +314,14 @@ public class ManageDiaryController extends App
             alert.setContentText("Upload thanh cong!");
             alert.show();
 
+            Button btn = (Button)lessonsContainer.getChildren().getLast();
+
+            resetAllBtn(countGlobal);
+
+//            btn.setTextFill(Color.WHITE);
+            btn.setStyle("-fx-background-color: #F05454");
+            btn.setStyle("-fx-font-size: 20");
+
             loadTable1Comment(uploadFile.findLessonByTitle(titleValue));
             loadTable2Comment(uploadFile.findLessonByTitle(titleValue));
 
@@ -313,12 +335,15 @@ public class ManageDiaryController extends App
     {
         int classId = 3;
         countGlobal = loadLessons(classId) + 1;
+
+        resetAllBtn(countGlobal);
     }
-    public void onMouseClickGetTblCommentsByBtnId(MouseEvent event)
+    public void onMouseClickGetTblCommentsByLessonName(MouseEvent event)
     {
         Files file = new Files();
 
-        String text = ((Button)event.getSource()).getText();
+        Button btn = (Button)event.getSource();
+        String text = btn.getText();
 
         int btnLessonId = Integer.parseInt(text.substring(7));
 
@@ -343,5 +368,12 @@ public class ManageDiaryController extends App
                 loadTable2Comment(listLessonId.get(i));
             }
         }
+        resetAllBtn(countGlobal);
+
+//        btn.setTextFill(Color.WHITE);
+        btn.setStyle("-fx-background-color: #F05454");
+        btn.setStyle("-fx-font-size: 20");
+
+//        System.out.println(countGlobal);
     }
 }
