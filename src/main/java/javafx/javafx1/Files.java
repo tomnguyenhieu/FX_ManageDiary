@@ -122,7 +122,7 @@ public class Files
     }
     public ResultSet listLessonsByClassId(int classId)
     {
-        String sql = "SELECT * FROM lessons WHERE class_id = " + classId;
+        String sql = "SELECT * FROM lessons WHERE class_id = " +classId;
         PreparedStatement ps;
         try {
             ps = connect.prepareStatement(sql);

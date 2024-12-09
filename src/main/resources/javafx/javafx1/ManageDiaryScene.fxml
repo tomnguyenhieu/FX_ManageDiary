@@ -114,21 +114,21 @@
                      <content>
                         <VBox fx:id="lessonsContainer" prefHeight="600.0" prefWidth="280.0" spacing="15.0" style="-fx-background-color: #F5F5F5;">
                            <children>
-                              <HBox fx:id="lessonBtn" minHeight="55.0" minWidth="200.0" onMouseClicked="#onMouseClickLoadTblComments" prefHeight="55.0" prefWidth="200.0" style="-fx-background-color: #F05454;">
-                                 <children>
-                                    <Label alignment="CENTER" prefHeight="55.0" prefWidth="250.0" text="Lesson 1" textFill="WHITE">
-                                       <font>
-                                          <Font size="22.0" />
-                                       </font>
-                                    </Label>
-                                 </children>
-                                 <cursor>
-                                    <Cursor fx:constant="HAND" />
-                                 </cursor>
-                                 <VBox.margin>
-                                    <Insets />
-                                 </VBox.margin>
-                              </HBox>
+<!--                              <HBox fx:id="lessonBtn" minHeight="55.0" minWidth="200.0" onMouseClicked="#onMouseClickLoadTblComments" prefHeight="55.0" prefWidth="200.0" style="-fx-background-color: #F05454;">-->
+<!--                                 <children>-->
+<!--                                    <Label alignment="CENTER" prefHeight="55.0" prefWidth="250.0" text="Lesson 1" textFill="WHITE">-->
+<!--                                       <font>-->
+<!--                                          <Font size="22.0" />-->
+<!--                                       </font>-->
+<!--                                    </Label>-->
+<!--                                 </children>-->
+<!--                                 <cursor>-->
+<!--                                    <Cursor fx:constant="HAND" />-->
+<!--                                 </cursor>-->
+<!--                                 <VBox.margin>-->
+<!--                                    <Insets />-->
+<!--                                 </VBox.margin>-->
+<!--                              </HBox>-->
                            </children>
                            <padding>
                               <Insets left="12.0" right="12.0" top="12.0" />

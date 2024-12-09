@@ -4,10 +4,12 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.css.converter.ColorConverter;
 import javafx.event.ActionEvent;
+import javafx.event.EventTarget;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
@@ -23,6 +25,7 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.awt.*;
+import java.awt.TextField;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -30,6 +33,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import javafx.scene.control.cell.PropertyValueFactory;
 
@@ -41,6 +45,8 @@ public class ManageDiaryController extends App
     private String className = "";
     private String commentStudentName = "";
     private String commentStudentComment = "";
+
+    private int countGlobal = 0;
 
     @FXML
     private TableView<Comment> tblComment1;
@@ -219,43 +225,38 @@ public class ManageDiaryController extends App
 
         return isDuplicated;
     }
-    public void addLessonBtn()
+    public void addLessonBtn(int count)
     {
-        Label lessonLabel = new Label("Lesson 1");
-        lessonLabel.setMinSize(250, 55);
-        lessonLabel.setPrefSize(250, 55);
-//                lessonLabel.setStyle("-fx-background-color: #000000;");
-        lessonLabel.setAlignment(Pos.CENTER);
-        lessonLabel.setTextFill(Color.BLACK);
-        lessonLabel.setFont(new Font(22));
+        String lessonName = "Lesson";
 
-        HBox lessonBody = new HBox(lessonLabel);
-        lessonBody.setMinSize(200, 55);
-        lessonBody.setPrefSize(200, 55);
-        lessonBody.setStyle("-fx-background-color: #D9D9D9;");
+        Button lessonBtn = new Button(lessonName + " " + count);
+        lessonBtn.setId("lessonBtnTest");
+        lessonBtn.setMinSize(260, 55);
+        lessonBtn.setPrefSize(200, 55);
+        lessonBtn.setStyle("-fx-background-color: #F05454");
 
-        lessonsContainer.getChildren().add(lessonBody);
+        lessonBtn.addEventHandler(MouseEvent.MOUSE_CLICKED, this::onMouseClickGetTblCommentsByBtnId);
+
+        lessonsContainer.getChildren().add(lessonBtn);
     }
-    public void loadLessons(int classId)
+    public int loadLessons(int classId)
     {
         Files file = new Files();
         ResultSet rs = file.listLessonsByClassId(classId);
-
-//        List<Integer> listLessonsId = new ArrayList<>();
+        int count = 0;
 
         try {
             while (rs.next())
             {
-//                int lessonId = rs.getInt("id");
-//                listLessonsId.add(lessonId);
-
-                addLessonBtn();
+                count += 1 ;
+                addLessonBtn(count);
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-    }
 
+        return count;
+    }
 
     // Xu ly event
     public void onActionBtnUploadFile(ActionEvent event)
@@ -269,13 +270,10 @@ public class ManageDiaryController extends App
 
         ArrayList<List<String>> listExcelComment = readExcelComment(file);
 
-//        for (List<String> list : listExcelComment)
-//        {
-//            System.out.println(list);
-//        }
-
         Files uploadFile = new Files();
         int classId = uploadFile.getClassId(classValue);
+
+        addLessonBtn(countGlobal);
 
         if (!checkDuplicate(listExcelContent))
         {
@@ -294,14 +292,13 @@ public class ManageDiaryController extends App
                 String studentComment = item.get(2);
 
                 uploadFile.storeExcelComment(studentId, titleValue, studentComment);
-//                System.out.println(studentId + " " + studentComment);
             }
+
+            countGlobal += 1;
 
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setContentText("Upload thanh cong!");
             alert.show();
-
-            addLessonBtn();
 
             loadTable1Comment(uploadFile.findLessonByTitle(titleValue));
             loadTable2Comment(uploadFile.findLessonByTitle(titleValue));
@@ -312,15 +309,39 @@ public class ManageDiaryController extends App
             alert.show();
         }
     }
-    public void onMouseClickLoadTblComments(MouseEvent event)
-    {
-        int lessonId = 67;
-        loadTable1Comment(lessonId);
-        loadTable2Comment(lessonId);
-    }
     public void onMouseClickLoadListLessons(MouseEvent event)
     {
         int classId = 3;
-        loadLessons(classId);
+        countGlobal = loadLessons(classId) + 1;
+    }
+    public void onMouseClickGetTblCommentsByBtnId(MouseEvent event)
+    {
+        Files file = new Files();
+
+        String text = ((Button)event.getSource()).getText();
+
+        int btnLessonId = Integer.parseInt(text.substring(7));
+
+        List<Integer> listLessonId = new ArrayList<>();
+        ResultSet rs = file.listLessonsByClassId(3);
+
+        try {
+            while (rs.next())
+            {
+                int lessonId = rs.getInt("id");
+                listLessonId.add(lessonId);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        for (int i = 0; i <= listLessonId.size(); i++)
+        {
+            if (i == (btnLessonId - 1))
+            {
+                loadTable1Comment(listLessonId.get(i));
+                loadTable2Comment(listLessonId.get(i));
+            }
+        }
     }
 }
