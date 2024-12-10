@@ -4,6 +4,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Cursor;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
@@ -214,11 +215,13 @@ public class ManageDiaryController extends App
         String lessonName = "Lesson";
 
         Button lessonBtn = new Button(lessonName + " " + count);
-        lessonBtn.setTextFill(Color.BLACK);
         lessonBtn.setId("lessonBtnTest");
         lessonBtn.setMinSize(260, 55);
         lessonBtn.setPrefSize(200, 55);
+        lessonBtn.setCursor(Cursor.HAND);
         lessonBtn.setStyle("-fx-background-color: #D9D9D9; -fx-font-size: 20");
+        lessonBtn.setTextFill(Color.BLACK);
+
 
         lessonBtn.addEventHandler(MouseEvent.MOUSE_CLICKED, this::onMouseClickGetTblCommentsByLessonName);
 

@@ -89,7 +89,7 @@
                         <Insets />
                      </HBox.margin>
                   </Label>
-                  <Button mnemonicParsing="false" onAction="#onActionBtnUploadFile" prefHeight="35.0" prefWidth="278.0" text="Đăng tải nhật ký">
+                  <Button mnemonicParsing="false" onAction="#onActionBtnUploadFile" prefHeight="35.0" prefWidth="278.0" style="-fx-background-color: #30475E;" text="Đăng tải nhật ký" textFill="WHITE">
                      <font>
                         <Font size="20.0" />
                      </font>
@@ -110,9 +110,9 @@
             </HBox>
             <HBox maxHeight="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" style="-fx-background-color: #ffffff;">
                <children>
-                  <ScrollPane prefHeight="600.0" prefWidth="370.0">
+                  <ScrollPane hbarPolicy="NEVER" prefHeight="600.0" prefWidth="370.0">
                      <content>
-                        <VBox fx:id="lessonsContainer" prefHeight="600.0" prefWidth="280.0" spacing="15.0" style="-fx-background-color: #F5F5F5;">
+                        <VBox fx:id="lessonsContainer" prefHeight="546.0" prefWidth="280.0" spacing="15.0" style="-fx-background-color: #F5F5F5;">
                            <children>
 <!--                              <HBox fx:id="lessonBtn" minHeight="55.0" minWidth="200.0" onMouseClicked="#onMouseClickLoadTblComments" prefHeight="55.0" prefWidth="200.0" style="-fx-background-color: #F05454;">-->
 <!--                                 <children>-->
