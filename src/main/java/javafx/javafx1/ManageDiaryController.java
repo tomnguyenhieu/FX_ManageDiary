@@ -2,18 +2,23 @@ package javafx.javafx1;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Cursor;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -21,6 +26,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import javafx.event.ActionEvent;
+
 import javafx.scene.control.cell.PropertyValueFactory;
 
 public class ManageDiaryController extends App
@@ -33,6 +40,7 @@ public class ManageDiaryController extends App
     private String commentStudentComment = "";
 
     private int countGlobal = 0;
+    private int classIdGlobal = 0;
 
     @FXML
     private TableView<Comment> tblComment1;
@@ -54,6 +62,9 @@ public class ManageDiaryController extends App
 
     @FXML
     private VBox lessonsContainer;
+
+    @FXML
+    private Button btnBack;
 
     // Xu ly logic
     public void loadTable1Comment(int lessonId)
@@ -103,7 +114,7 @@ public class ManageDiaryController extends App
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-//
+
         tblCol2StudentName.setCellValueFactory(new PropertyValueFactory<Comment, String>("commentStudentName"));
         tblCol2StudentComment.setCellValueFactory(new PropertyValueFactory<Comment, String>("commentStudentComment"));
 
@@ -227,7 +238,7 @@ public class ManageDiaryController extends App
 
         lessonsContainer.getChildren().add(lessonBtn);
     }
-    public int loadLessons(int classId)
+    public int displayLessons(int classId)
     {
         Files file = new Files();
         ResultSet rs = file.listLessonsByClassId(classId);
@@ -256,9 +267,15 @@ public class ManageDiaryController extends App
             btn.setStyle("-fx-background-color: #D9D9D9; -fx-font-size: 20");
         }
     }
+    public void loadLessons(int classId)
+    {
+        this.classIdGlobal = classId;
+        countGlobal = displayLessons(classId) + 1;
+        resetAllBtn(countGlobal);
+    }
 
     // Xu ly event
-    public void onActionBtnUploadFile(ActionEvent event)
+    public void onActionBtnUploadFile()
     {
         File file = uploadFile();
         List<String> listExcelContent = readExcelInfo(file);
@@ -315,13 +332,6 @@ public class ManageDiaryController extends App
             alert.show();
         }
     }
-    public void onMouseClickLoadListLessons(MouseEvent event)
-    {
-        int classId = 3;
-        countGlobal = loadLessons(classId) + 1;
-
-        resetAllBtn(countGlobal);
-    }
     public void onMouseClickGetTblCommentsByLessonName(MouseEvent event)
     {
         Files file = new Files();
@@ -332,7 +342,8 @@ public class ManageDiaryController extends App
         int btnLessonId = Integer.parseInt(text.substring(7));
 
         List<Integer> listLessonId = new ArrayList<>();
-        ResultSet rs = file.listLessonsByClassId(3);
+
+        ResultSet rs = file.listLessonsByClassId(classIdGlobal);
 
         try {
             while (rs.next())
@@ -356,5 +367,19 @@ public class ManageDiaryController extends App
 
         btn.setTextFill(Color.WHITE);
         btn.setStyle("-fx-background-color: #F05454; -fx-font-size: 20");
+    }
+    public void backToClassScene(ActionEvent event)
+    {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("ManageClassScene.fxml"));
+            Parent root = fxmlLoader.load();
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            Scene indexScene = new Scene(root, 1280, 720);
+
+            stage.setScene(indexScene);
+            stage.show();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

@@ -132,4 +132,33 @@ public class Files
             throw new RuntimeException(e);
         }
     }
+    public ResultSet listClasses()
+    {
+        String sql = "SELECT * FROM classes";
+        PreparedStatement ps;
+        try {
+            ps = connect.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            return rs;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public ResultSet getClassInfoByClassId(int classId)
+    {
+        String sql = "SELECT c.name AS class_name, a_teacher.name AS teacher_name, "
+                + "COUNT(a_student.id) AS total_students FROM classes c "
+                + "LEFT JOIN accounts a_teacher ON c.teacher_id = a_teacher.id "
+                + "AND a_teacher.role = 2 LEFT JOIN accounts a_student "
+                + "ON c.id = a_student.class_id AND a_student.role = 4 "
+                + "WHERE c.id = "+classId+" GROUP BY c.name, a_teacher.name";
+        PreparedStatement ps;
+        try {
+            ps = connect.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            return rs;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
