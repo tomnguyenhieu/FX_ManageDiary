@@ -6,10 +6,12 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.net.URL;
 import java.sql.ResultSet;
@@ -22,10 +24,22 @@ public class AddClassController implements Initializable
     public String className = "";
     public String teacherName = "";
 
+    private boolean edit = false;
+    public void setEdit(boolean edit) {
+        this.edit = edit;
+    }
+
+    private int classIdGlobal = 0;
+    public void setClassIdGlobal(int classIdGlobal) {
+        this.classIdGlobal = classIdGlobal;
+    }
+
     @FXML
     private TextField inputClass;
     @FXML
     private ComboBox cbTeachersName;
+//    private String classNameGlobal;
+//    private String teacherNameGlobal;
 
     // Xu ly logic
     public void initComboBox()
@@ -59,9 +73,22 @@ public class AddClassController implements Initializable
         int teacherId = file.getTeacherId(teacherName);
         file.storeClass(className, teacherId);
     }
+    public void updateClassOnEdit()
+    {
+        className = inputClass.getText();
+        teacherName = cbTeachersName.getValue().toString().substring(11);
+
+        Files file = new Files();
+        int teacherId = file.getTeacherId(teacherName);
+//        int classId = file.getClassId(className);
+
+        System.out.println(teacherId + " " + classIdGlobal + " " + className);
+        file.updateClass(className, teacherId, classIdGlobal);
+    }
     public void setUpClassForm(String className, String teacherName)
     {
-
+        inputClass.setText(className);
+        cbTeachersName.setValue(teacherName);
     }
 
     // Xu ly event
@@ -72,8 +99,21 @@ public class AddClassController implements Initializable
     }
     public void onActionConfirm(ActionEvent event)
     {
-        storeClass();
-        close(event);
+        if (!edit)
+        {
+            storeClass();
+            close(event);
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setContentText("Them moi thanh cong!");
+            alert.show();
+        } else
+        {
+            updateClassOnEdit();
+            close(event);
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setContentText("Sua thanh cong!");
+            alert.show();
+        }
     }
     public void onActionCancel(ActionEvent event)
     {

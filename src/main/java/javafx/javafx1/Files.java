@@ -205,4 +205,48 @@ public class Files
             throw new RuntimeException(e);
         }
     }
+    public boolean updateClass(String className, int teacherId, int classId)
+    {
+        String sql = "UPDATE classes SET name = '" +className+ "', teacher_id = '" +teacherId+ "'  WHERE id = '" +classId+ "'";
+        PreparedStatement ps;
+        try {
+            ps = connect.prepareStatement(sql);
+            ps.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public void deleteClass(int classId)
+    {
+        String sql1 = "DELETE FROM lessons WHERE class_id = '" +classId+ "'";
+        try {
+            PreparedStatement ps = connect.prepareStatement(sql1);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        String sql2 = "DELETE FROM comments WHERE class_id = '" +classId+ "'";
+        try {
+            PreparedStatement ps = connect.prepareStatement(sql2);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        String sql3 = "DELETE FROM accounts WHERE class_id = '" +classId+ "'";
+        try {
+            PreparedStatement ps = connect.prepareStatement(sql3);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        String sql4 = "DELETE FROM classes WHERE id = '" +classId+ "'";
+        try {
+            PreparedStatement ps = connect.prepareStatement(sql4);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }

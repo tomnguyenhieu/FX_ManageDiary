@@ -30,7 +30,6 @@ public class ManageClassController extends App
     private int classId = 0;
     private boolean isClicked = false;
     private AnchorPane contentPane;
-    public FXMLLoader loader;
 
     @FXML
     private TilePane tilePane;
@@ -44,7 +43,6 @@ public class ManageClassController extends App
         vbox.setStyle("-fx-background-color:  #30475E; -fx-background-radius: 8");
 
         Label label = new Label(className);
-//        label.setId("labelClassId");
         label.setMinSize(240, 46);
         label.setPrefSize(240, 46);
         label.setFont(new Font("Roboto", 24));
@@ -66,7 +64,6 @@ public class ManageClassController extends App
         HBox.setMargin(vboxText, new Insets(10, 0, 10, 10));
 
         Label teacherNameLabel = new Label();
-//        teacherNameLabel.setId("labelTeacherId");
         teacherNameLabel.setText("Giáo viên: " + teacherName);
         teacherNameLabel.setMinSize(190, 41);
         teacherNameLabel.setFont(new Font(14));
@@ -166,7 +163,6 @@ public class ManageClassController extends App
 
             contentPane.getChildren().removeAll();
             contentPane.getChildren().setAll(root);
-
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -182,8 +178,11 @@ public class ManageClassController extends App
     public void onActionAddClass()
     {
         try {
-            loader = new FXMLLoader(getClass().getResource("AddClassScene.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("AddClassScene.fxml"));
             Parent root = loader.load();
+
+            AddClassController addClassController = loader.getController();
+            addClassController.setEdit(false);
 
             Stage stage = new Stage();
             Scene scene = new Scene(root);
@@ -201,13 +200,25 @@ public class ManageClassController extends App
     }
     public void onMouseClickEditClass(MouseEvent event)
     {
-        System.out.println("Clicked!");
+        AnchorPane iconContainer = (AnchorPane) event.getSource();
+        VBox vboxIcons = (VBox) iconContainer.getParent();
+        HBox hbox = (HBox) vboxIcons.getParent();
+        VBox vboxParent = (VBox) hbox.getParent();
+        Label classLabel = (Label) vboxParent.getChildren().getFirst();
+
+        VBox vboxText = (VBox) hbox.getChildren().getFirst();
+        Label teacherLabel = (Label) vboxText.getChildren().getFirst();
+
+        Files files = new Files();
+
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("AddClassScene.fxml"));
             Parent root = loader.load();
 
             AddClassController addClassController = loader.getController();
-//            addClassController.getClassName()
+            addClassController.setUpClassForm(classLabel.getText(), teacherLabel.getText());
+            addClassController.setEdit(true);
+            addClassController.setClassIdGlobal(files.getClassId(classLabel.getText()));
 
             Stage stage = new Stage();
             Scene scene = new Scene(root);
@@ -215,6 +226,11 @@ public class ManageClassController extends App
             stage.initStyle(StageStyle.TRANSPARENT);
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.show();
+
+            stage.setOnCloseRequest((event1) -> {
+                tilePane.getChildren().clear();
+                displayClasses();
+            });
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -222,6 +238,23 @@ public class ManageClassController extends App
     }
     public void onMouseClickRemoveClass(MouseEvent event)
     {
-        System.out.println("Removed!");
+        Files files = new Files();
+
+        AnchorPane iconContainer = (AnchorPane) event.getSource();
+        VBox vboxIcons = (VBox) iconContainer.getParent();
+        HBox hbox = (HBox) vboxIcons.getParent();
+        VBox vboxParent = (VBox) hbox.getParent();
+        Label classLabel = (Label) vboxParent.getChildren().getFirst();
+
+        System.out.println(classLabel.getText());
+
+        int classId = files.getClassId(classLabel.getText());
+
+        System.out.println(classId);
+
+        files.deleteClass(classId);
+
+        tilePane.getChildren().clear();
+        displayClasses();
     }
 }

@@ -27,7 +27,7 @@
                         <Insets />
                      </HBox.margin>
                   </Label>
-                  <Button mnemonicParsing="false" onAction="#onActionBtnUploadFile" prefHeight="35.0" prefWidth="278.0" style="-fx-background-color: #30475E;" text="Đăng tải nhật ký" textFill="WHITE">
+                  <Button mnemonicParsing="false" onAction="#onActionBtnUploadFile" prefHeight="35.0" prefWidth="278.0" style="-fx-background-color: #30475E; -fx-background-radius: 8;" text="Đăng tải nhật ký" textFill="WHITE">
                      <font>
                         <Font size="20.0" />
                      </font>
@@ -41,7 +41,6 @@
                         <FontIcon iconColor="WHITE" iconLiteral="fas-upload" />
                      </graphic>
                   </Button>
-                  <Button fx:id="btnBack" mnemonicParsing="false" onAction="#backToClassScene" prefHeight="26.0" prefWidth="31.0" text="Button" />
                </children>
                <VBox.margin>
                   <Insets />
