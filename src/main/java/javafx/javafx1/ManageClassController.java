@@ -30,6 +30,7 @@ public class ManageClassController extends App
 {
     private int classId = 0;
     private boolean isClicked = false;
+    private AnchorPane contentPane;
 
     @FXML
     private TilePane tilePane;
@@ -108,6 +109,10 @@ public class ManageClassController extends App
 
         tilePane.getChildren().add(vbox);
     }
+    public void getContentPane(AnchorPane pane)
+    {
+        this.contentPane = pane;
+    }
 
     // Xu ly event
     public void onMouseClickLoadListLessons(MouseEvent event)
@@ -121,14 +126,13 @@ public class ManageClassController extends App
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("ManageDiaryScene.fxml"));
             Parent root = fxmlLoader.load();
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            Scene indexScene = new Scene(root, 1280, 720);
 
             ManageDiaryController manageDiaryController = fxmlLoader.getController();
             manageDiaryController.loadLessons(classId);
 
-            stage.setScene(indexScene);
-            stage.show();
+            contentPane.getChildren().removeAll();
+            contentPane.getChildren().setAll(root);
+
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
