@@ -71,6 +71,8 @@ public class SideBarController extends App implements Initializable
             case "studentBtn":
                 sceneName = "ManageStudentScene";
                 break;
+            case "teacherBtn":
+                sceneName = "ManageTeacherScene";
         }
         return sceneName;
     }
@@ -94,15 +96,14 @@ public class SideBarController extends App implements Initializable
             throw new RuntimeException(e);
         }
 
-        ManageClassController manageClassController = fxmlLoader.getController();
         switch (sceneName)
         {
             case "ManageClassScene":
+                ManageClassController manageClassController = fxmlLoader.getController();
                 manageClassController.onMouseClickDisplayClasses();
+                manageClassController.getContentPane(contentPane);
                 break;
         }
-
-        manageClassController.getContentPane(contentPane);
     }
     public void onMouseClickGetTitledPaneChildren(MouseEvent event)
     {

@@ -26,7 +26,12 @@ public class Accounts
     }
 
     public ResultSet studentsInfo() {
-        String sql = "SELECT accounts.id, accounts.name, accounts.age, accounts.gender, accounts.email, accounts.password, accounts.phone, accounts.address, accounts.parents_name, accounts.parents_phone, accounts.parents_email, accounts.fee, classes.name FROM accounts JOIN classes ON classes.id = accounts.class_id  WHERE accounts.role = 4";
+        String sql = "SELECT accounts.id, accounts.name, accounts.age, "
+                    + "accounts.gender, accounts.email, accounts.password, "
+                    + "accounts.phone, accounts.address, accounts.parents_name, "
+                    + "accounts.parents_phone, accounts.parents_email, accounts.fee, "
+                    + "classes.name FROM accounts JOIN classes "
+                    + "ON classes.id = accounts.class_id WHERE accounts.role = 4";
         try {
             PreparedStatement ps = connect.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
@@ -125,6 +130,19 @@ public class Accounts
             ps.execute();
         } catch (Exception e) {
             System.out.println(e);
+        }
+    }
+
+    // Get Teachers info
+    public ResultSet getTeachersInfo() {
+        String sql = "SELECT * FROM accounts WHERE role = 2";
+        try {
+            PreparedStatement ps = connect.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            return rs;
+        } catch (Exception e) {
+            System.out.println(e);
+            return null;
         }
     }
 }

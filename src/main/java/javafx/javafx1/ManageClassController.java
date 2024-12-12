@@ -5,10 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.*;
-import javafx.scene.control.Accordion;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.Menu;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
@@ -18,7 +15,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import org.kordamp.ikonli.javafx.FontIcon;
 
 import javax.swing.plaf.synth.SynthUI;
@@ -31,12 +30,13 @@ public class ManageClassController extends App
     private int classId = 0;
     private boolean isClicked = false;
     private AnchorPane contentPane;
+    public FXMLLoader loader;
 
     @FXML
     private TilePane tilePane;
 
     // Xu ly logic
-    public void displayClass(String className, String teacherName, int totalStudents)
+    public void initClassBox(String className, String teacherName, int totalStudents)
     {
         VBox vbox = new VBox();
         vbox.setMinSize(240, 150);
@@ -44,6 +44,7 @@ public class ManageClassController extends App
         vbox.setStyle("-fx-background-color:  #30475E; -fx-background-radius: 8");
 
         Label label = new Label(className);
+//        label.setId("labelClassId");
         label.setMinSize(240, 46);
         label.setPrefSize(240, 46);
         label.setFont(new Font("Roboto", 24));
@@ -65,6 +66,7 @@ public class ManageClassController extends App
         HBox.setMargin(vboxText, new Insets(10, 0, 10, 10));
 
         Label teacherNameLabel = new Label();
+//        teacherNameLabel.setId("labelTeacherId");
         teacherNameLabel.setText("Giáo viên: " + teacherName);
         teacherNameLabel.setMinSize(190, 41);
         teacherNameLabel.setFont(new Font(14));
@@ -113,6 +115,38 @@ public class ManageClassController extends App
     {
         this.contentPane = pane;
     }
+    public void displayClasses()
+    {
+        Files file = new Files();
+        ResultSet rs = file.listClasses();
+
+        String teacherName = "";
+        int totalStudents = 0;
+
+        try {
+            while (rs.next())
+            {
+                String className = rs.getString("name");
+                classId = rs.getInt("id");
+
+                ResultSet classInfoRs = file.getClassInfoByClassId(classId);
+
+                try {
+                    while (classInfoRs.next())
+                    {
+                        teacherName = classInfoRs.getString("teacher_name");
+                        totalStudents = classInfoRs.getInt("total_students");
+                    }
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+
+                initClassBox(className, teacherName, totalStudents);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     // Xu ly event
     public void onMouseClickLoadListLessons(MouseEvent event)
@@ -141,45 +175,50 @@ public class ManageClassController extends App
     {
         if (!isClicked)
         {
-            Files file = new Files();
-            ResultSet rs = file.listClasses();
-
-            String teacherName = "";
-            int totalStudents = 0;
-
-            try {
-                while (rs.next())
-                {
-                    String className = rs.getString("name");
-                    classId = rs.getInt("id");
-
-                    ResultSet classInfoRs = file.getClassInfoByClassId(classId);
-
-                    try {
-                        while (classInfoRs.next())
-                        {
-                            teacherName = classInfoRs.getString("teacher_name");
-                            totalStudents = classInfoRs.getInt("total_students");
-                        }
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-
-                    displayClass(className, teacherName, totalStudents);
-                }
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
+            displayClasses();
         }
         isClicked = true;
     }
     public void onActionAddClass()
     {
-        return;
+        try {
+            loader = new FXMLLoader(getClass().getResource("AddClassScene.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = new Stage();
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.initStyle(StageStyle.TRANSPARENT);
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.show();
+            stage.setOnCloseRequest((event) -> {
+                tilePane.getChildren().clear();
+                displayClasses();
+            });
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
     public void onMouseClickEditClass(MouseEvent event)
     {
         System.out.println("Clicked!");
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("AddClassScene.fxml"));
+            Parent root = loader.load();
+
+            AddClassController addClassController = loader.getController();
+//            addClassController.getClassName()
+
+            Stage stage = new Stage();
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.initStyle(StageStyle.TRANSPARENT);
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.show();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
     }
     public void onMouseClickRemoveClass(MouseEvent event)
     {

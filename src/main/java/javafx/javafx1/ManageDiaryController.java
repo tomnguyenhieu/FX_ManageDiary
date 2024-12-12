@@ -89,10 +89,10 @@ public class ManageDiaryController extends App
                     new Comment(title, content, className, teacherName)
             );
 
-        tblCol1Title.setCellValueFactory(new PropertyValueFactory<Comment, String>("commentTitle"));
-        tblCol1Content.setCellValueFactory(new PropertyValueFactory<Comment, String>("commentContent"));
-        tblCol1Class.setCellValueFactory(new PropertyValueFactory<Comment, String>("commentClassName"));
-        tblCol1Teacher.setCellValueFactory(new PropertyValueFactory<Comment, String>("commentTeacherName"));
+        tblCol1Title.setCellValueFactory(new PropertyValueFactory<>("commentTitle"));
+        tblCol1Content.setCellValueFactory(new PropertyValueFactory<>("commentContent"));
+        tblCol1Class.setCellValueFactory(new PropertyValueFactory<>("commentClassName"));
+        tblCol1Teacher.setCellValueFactory(new PropertyValueFactory<>("commentTeacherName"));
 
         tblComment1.setItems(data);
     }

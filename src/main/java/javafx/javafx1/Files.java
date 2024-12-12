@@ -161,4 +161,48 @@ public class Files
             throw new RuntimeException(e);
         }
     }
+    public boolean storeClass(String className, int teacherId)
+    {
+        String sql = "INSERT INTO classes(teacher_id, name) VALUES(?, ?)";
+        PreparedStatement ps;
+        try {
+            ps = connect.prepareStatement(sql);
+            ps.setInt(1, teacherId);
+            ps.setString(2, className);
+            ps.executeUpdate();
+            return true;
+        } catch (Exception e) {
+//            throw new RuntimeException(e);
+            return false;
+        }
+    }
+    public int getTeacherId(String teacherName)
+    {
+        String sql = "SELECT * FROM accounts WHERE NAME = '" +teacherName+ "' AND role = 2";
+        int teacherId = 0;
+        PreparedStatement ps;
+        try {
+            ps = connect.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next())
+            {
+                teacherId = rs.getInt("id");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return teacherId;
+    }
+    public ResultSet getTeachersName()
+    {
+        String sql = "SELECT * FROM accounts WHERE role = 2";
+        PreparedStatement ps;
+        try {
+            ps = connect.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            return rs;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

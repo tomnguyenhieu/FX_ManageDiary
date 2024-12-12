@@ -51,6 +51,7 @@ public class Comment {
 
     // Getter for commentStudentComment
     public String getCommentStudentComment() {
+
         return commentStudentComment.get();
     }
 }
