@@ -1,8 +1,8 @@
 package javafx.javafx1;
 
-//import com.test.mytestjavafx.HelloApplication;
-//import com.test.mytestjavafx.model.Accounts;
-//import com.test.mytestjavafx.model.Student;
+import javafx.javafx1.App;
+import javafx.javafx1.Accounts;
+import javafx.javafx1.Student;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -16,8 +16,10 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.effect.ColorAdjust;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -27,12 +29,14 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.ResultSet;
 import java.util.ResourceBundle;
+import java.util.Stack;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class ManageStudentController extends App implements Initializable {
     Student student = null;
     Accounts acc = new Accounts();
+    double orgSceneX, orgSceneY, orgTranslateX, orgTranslateY;
     @FXML
     private TableView<Student> studentsTable;
     @FXML
@@ -61,6 +65,9 @@ public class ManageStudentController extends App implements Initializable {
     private TableColumn<Student, String> feeCol;
     @FXML
     private TableColumn<Student, String> classNameCol;
+    @FXML
+    private TableColumn<Student, String> statusCol;
+
 
 
     @FXML
@@ -83,7 +90,9 @@ public class ManageStudentController extends App implements Initializable {
                         rs.getString("parents_phone"),
                         rs.getString("parents_email"),
                         rs.getInt("fee"),
-                        rs.getString("classes.name")));
+                        rs.getString("classes.name"),
+                        checkStatus(rs.getInt("status"))
+                ));
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -95,17 +104,25 @@ public class ManageStudentController extends App implements Initializable {
         genderCol.setCellValueFactory(new PropertyValueFactory<>("gender"));
         emailCol.setCellValueFactory(new PropertyValueFactory<>("email"));
         passCol.setCellValueFactory(new PropertyValueFactory<>("password"));
-        phoneCol.setCellValueFactory(new PropertyValueFactory<Student, String>("phone"));
-        addressCol.setCellValueFactory(new PropertyValueFactory<Student, String>("address"));
-        pNameCol.setCellValueFactory(new PropertyValueFactory<Student, String>("pName"));
-        pPhoneCol.setCellValueFactory(new PropertyValueFactory<Student, String>("pPhone"));
-        pEmailCol.setCellValueFactory(new PropertyValueFactory<Student, String>("pEmail"));
-        feeCol.setCellValueFactory(new PropertyValueFactory<Student, String>("fee"));
-        classNameCol.setCellValueFactory(new PropertyValueFactory<Student, String>("className"));
+        phoneCol.setCellValueFactory(new PropertyValueFactory<>("phone"));
+        addressCol.setCellValueFactory(new PropertyValueFactory<>("address"));
+        pNameCol.setCellValueFactory(new PropertyValueFactory<>("pName"));
+        pPhoneCol.setCellValueFactory(new PropertyValueFactory<>("pPhone"));
+        pEmailCol.setCellValueFactory(new PropertyValueFactory<>("pEmail"));
+        feeCol.setCellValueFactory(new PropertyValueFactory<>("fee"));
+        classNameCol.setCellValueFactory(new PropertyValueFactory<>("className"));
+        statusCol.setCellValueFactory(new PropertyValueFactory<>("status"));
 
         studentsTable.setItems(StudentList);
         System.out.println("refresh!!!!!!!!!");
         //studentsTable.getColumns().addAll(idCol,nameCol,ageCol,genderCol,emailCol,passCol,phoneCol,addressCol,pNameCol,pPhoneCol,pEmailCol,feeCol,classNameCol);
+    }
+    private String checkStatus(int status){
+        if(status == 1){
+            return "Đang hoạt động";
+        }else{
+            return "Dừng hoạt động";
+        }
     }
     @FXML
     private void onAddStudentClick(){
@@ -189,5 +206,36 @@ public class ManageStudentController extends App implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         refreshTable();
+    }
+    public void onMouseEnter(MouseEvent event){
+        HBox hbox = (HBox) event.getSource();
+        hbox.setEffect(new ColorAdjust(0,0,0,-0.2));
+    }
+    public void onMouseExit(MouseEvent event){
+        HBox hbox = (HBox) event.getSource();
+        hbox.setEffect(new ColorAdjust(0,0,0,0));
+    }
+
+    public void onBtnAddPressed(MouseEvent event) {
+        orgSceneX = event.getSceneX();
+        orgSceneY = event.getSceneY();
+        StackPane stkPane = (StackPane)(event.getSource());
+        stkPane.setScaleY(1.1);
+        stkPane.setScaleX(1.1);
+        orgTranslateX = ((StackPane)(event.getSource())).getTranslateX();
+        orgTranslateY = ((StackPane)(event.getSource())).getTranslateY();
+    }
+    public void onBtnAddDragged(MouseEvent event) {
+        double offsetX = event.getSceneX() - orgSceneX;
+        double offsetY = event.getSceneY() - orgSceneY;
+        double newTranslateX = orgTranslateX + offsetX;
+        double newTranslateY = orgTranslateY + offsetY;
+        ((StackPane)(event.getSource())).setTranslateX(newTranslateX);
+        ((StackPane)(event.getSource())).setTranslateY(newTranslateY);
+    }
+    public void onBtnExit(MouseEvent event){
+        StackPane stkPane = (StackPane)(event.getSource());
+        stkPane.setScaleY(1);
+        stkPane.setScaleX(1);
     }
 }

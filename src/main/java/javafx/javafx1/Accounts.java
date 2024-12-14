@@ -26,12 +26,7 @@ public class Accounts
     }
 
     public ResultSet studentsInfo() {
-        String sql = "SELECT accounts.id, accounts.name, accounts.age, "
-                    + "accounts.gender, accounts.email, accounts.password, "
-                    + "accounts.phone, accounts.address, accounts.parents_name, "
-                    + "accounts.parents_phone, accounts.parents_email, accounts.fee, "
-                    + "classes.name FROM accounts JOIN classes "
-                    + "ON classes.id = accounts.class_id WHERE accounts.role = 4";
+        String sql = "SELECT * FROM accounts JOIN classes ON classes.id = accounts.class_id  WHERE accounts.role = 4";
         try {
             PreparedStatement ps = connect.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
@@ -70,24 +65,16 @@ public class Accounts
         }
     }
     public void deleteStudentById(int studentId){
-        String sql1 = "DELETE FROM comments WHERE student_id = '"+studentId+"'";
+        String sql = "UPDATE accounts SET status = 2 WHERE accounts.id = '"+studentId+"'";
         try {
-            PreparedStatement ps = connect.prepareStatement(sql1);
+            PreparedStatement ps = connect.prepareStatement(sql);
             ps.execute();
         } catch (Exception e) {
             System.out.println(e);
         }
-        String sql2 = "DELETE FROM accounts WHERE accounts.id = '"+studentId+"'";
-        try {
-            PreparedStatement ps = connect.prepareStatement(sql2);
-            ps.execute();
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-
     }
     public void addStudent(String name, int age, String gender, String email, String pass, String phone, String address, String pName, String pPhone, String pEmail, int fee, String className){
-        String sql = "INSERT INTO accounts (name, age, gender, email, password, role, phone, address, class_id, parents_name, parents_phone, parents_email, fee)" +
+        String sql = "INSERT INTO accounts (name, age, gender, email, password, role, phone, address, class_id, parents_name, parents_phone, parents_email, fee, status)" +
                      " VALUE (?,?,?,?,?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try {
             PreparedStatement ps = connect.prepareStatement(sql);
@@ -104,6 +91,7 @@ public class Accounts
             ps.setString(11, pPhone);
             ps.setString(12, pEmail);
             ps.setInt(13, fee);
+            ps.setInt(14, 1);
             ps.execute();
         } catch (Exception e) {
             System.out.println(e);

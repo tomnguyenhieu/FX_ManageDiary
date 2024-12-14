@@ -151,7 +151,7 @@ public class Files
                 + "LEFT JOIN accounts a_teacher ON c.teacher_id = a_teacher.id "
                 + "AND a_teacher.role = 2 LEFT JOIN accounts a_student "
                 + "ON c.id = a_student.class_id AND a_student.role = 4 "
-                + "WHERE c.id = "+classId+" GROUP BY c.name, a_teacher.name";
+                + "WHERE c.id = "+classId+" AND a_teacher.status = 1 GROUP BY c.name, a_teacher.name";
         PreparedStatement ps;
         try {
             ps = connect.prepareStatement(sql);

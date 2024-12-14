@@ -17,8 +17,15 @@ public class Student {
     private SimpleStringProperty pEmail;
     private int fee;
     private SimpleStringProperty className;
+    private SimpleStringProperty status;
 
-    public Student(int id, String name, int age, String gender, String email, String password, String phone, String address, String pName, String pPhone, String pEmail, int fee, String className) {
+
+
+    public SimpleStringProperty statusProperty() {
+        return status;
+    }
+
+    public Student(int id, String name, int age, String gender, String email, String password, String phone, String address, String pName, String pPhone, String pEmail, int fee, String className, String status) {
         this.id = id;
         this.name = new SimpleStringProperty(name);
         this.age = age;
@@ -32,6 +39,7 @@ public class Student {
         this.pEmail = new SimpleStringProperty(pEmail);
         this.fee = fee;
         this.className = new SimpleStringProperty(className);
+        this.status = new SimpleStringProperty(status);
     }
 
     public int getId() {
@@ -72,6 +80,9 @@ public class Student {
     }
     public String getClassName() {
         return className.get();
+    }
+    public String getStatus() {
+        return status.get();
     }
 
 }

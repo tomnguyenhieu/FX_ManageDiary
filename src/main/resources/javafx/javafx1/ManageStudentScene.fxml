@@ -6,30 +6,32 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.effect.ColorAdjust?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1000.0" style="-fx-background-color: #FFFFFF;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javafx.javafx1.ManageStudentController">
+<AnchorPane maxHeight="720.0" maxWidth="1000.0" minHeight="720.0" minWidth="1000.0" prefHeight="720.0" prefWidth="1000.0" style="-fx-background-color: #FFFFFF;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javafx.javafx1.ManageStudentController">
    <children>
-      <TableView fx:id="studentsTable" layoutX="15.0" layoutY="113.0" prefHeight="559.0" prefWidth="950.0" style="-fx-background-color: F5F5F5;">
-        <columns>
-          <TableColumn fx:id="idCol" prefWidth="20.799958050251007" text="Id" />
-          <TableColumn fx:id="nameCol" prefWidth="98.93340682983398" text="Ho va ten" />
+      <TableView fx:id="studentsTable" layoutX="15.0" layoutY="113.0" maxHeight="595.0" maxWidth="971.0" minHeight="559.0" minWidth="950.0" prefHeight="595.0" prefWidth="971.0" style="-fx-background-color: F5F5F5;">
+         <columns>
+            <TableColumn fx:id="idCol" prefWidth="20.799958050251007" text="Id" />
+            <TableColumn fx:id="nameCol" prefWidth="98.93340682983398" text="Ho va ten" />
             <TableColumn fx:id="ageCol" prefWidth="40.533355712890625" text="Tuoi" />
             <TableColumn fx:id="genderCol" prefWidth="60.2666015625" text="Gioi tinh" />
             <TableColumn fx:id="emailCol" prefWidth="90.93342590332031" text="Email" />
             <TableColumn fx:id="passCol" prefWidth="83.73345947265625" text="Mat khau" />
             <TableColumn fx:id="phoneCol" prefWidth="88.53338623046875" text="So dien thoai" />
-            <TableColumn fx:id="addressCol" prefWidth="76.800048828125" text="Dia chi" />
-            <TableColumn fx:id="pNameCol" prefWidth="76.00006103515625" text="Ten phu huynh" />
-            <TableColumn fx:id="pPhoneCol" prefWidth="86.13330078125" text="Sdt phu huynh" />
-            <TableColumn fx:id="pEmailCol" prefWidth="99.4666748046875" text="Email phu huynh" />
-            <TableColumn fx:id="feeCol" prefWidth="58.933349609375" text="Hoc phi" />
-            <TableColumn fx:id="classNameCol" prefWidth="45.3333740234375" text="Lop" />
-        </columns>
+            <TableColumn fx:id="addressCol" prefWidth="62.39996337890625" text="Dia chi" />
+            <TableColumn fx:id="pNameCol" prefWidth="76.0" text="Ten phu huynh" />
+            <TableColumn fx:id="pPhoneCol" prefWidth="79.199951171875" text="Sdt phu huynh" />
+            <TableColumn fx:id="pEmailCol" prefWidth="81.60003662109375" text="Email phu huynh" />
+            <TableColumn fx:id="feeCol" prefWidth="52.79998779296875" text="Hoc phi" />
+            <TableColumn fx:id="classNameCol" minWidth="0.0" prefWidth="43.46661376953125" text="Lop" />
+            <TableColumn fx:id="statusCol" prefWidth="70.13330078125" text="Trạng thái" />
+         </columns>
       </TableView>
       <HBox alignment="BOTTOM_LEFT" layoutX="22.0" layoutY="16.0" prefHeight="84.0" prefWidth="954.0">
          <children>
@@ -38,7 +40,7 @@
                   <Font size="42.0" />
                </font>
             </Label>
-            <HBox alignment="CENTER_LEFT" fillHeight="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#onEditStudentClick" prefHeight="44.0" prefWidth="124.0" style="-fx-background-color: #30475E; -fx-background-radius: 10;">
+            <HBox alignment="CENTER_LEFT" fillHeight="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#onEditStudentClick" onMouseEntered="#onMouseEnter" onMouseExited="#onMouseExit" prefHeight="44.0" prefWidth="124.0" style="-fx-background-color: #30475E; -fx-background-radius: 10;">
                <HBox.margin>
                   <Insets left="20.0" />
                </HBox.margin>
@@ -60,8 +62,11 @@
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
+               <effect>
+                  <ColorAdjust />
+               </effect>
             </HBox>
-            <HBox alignment="CENTER_LEFT" fillHeight="false" layoutX="702.0" layoutY="50.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#onDeleteStudentClick" prefHeight="44.0" prefWidth="124.0" style="-fx-background-color: #F05454; -fx-background-radius: 10;">
+            <HBox alignment="CENTER_LEFT" fillHeight="false" layoutX="702.0" layoutY="50.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#onDeleteStudentClick" onMouseEntered="#onMouseEnter" onMouseExited="#onMouseExit" prefHeight="44.0" prefWidth="124.0" style="-fx-background-color: #F05454; -fx-background-radius: 10;">
                <children>
                   <Label text="Xóa" textFill="WHITESMOKE">
                      <font>
@@ -86,7 +91,7 @@
             </HBox>
          </children>
       </HBox>
-      <StackPane layoutX="834.0" layoutY="548.0" prefHeight="140.0" prefWidth="140.0">
+      <StackPane alignment="BOTTOM_RIGHT" layoutX="858.0" layoutY="574.0" onMouseDragged="#onBtnAddDragged" onMousePressed="#onBtnAddPressed" onMouseReleased="#onBtnExit" prefHeight="84.0" prefWidth="86.0">
          <children>
             <Button mnemonicParsing="false" onMouseClicked="#onAddStudentClick" prefHeight="70.0" prefWidth="70.0" style="-fx-background-color: #30475E; -fx-background-radius: 10;" textFill="WHITE">
                <font>
@@ -99,6 +104,11 @@
                   <FontIcon iconColor="WHITE" iconLiteral="fas-user-plus" iconSize="28" tabSize="20" />
                </graphic>
             </Button>
+            <FontIcon iconLiteral="fas-arrows-alt" iconSize="20">
+               <StackPane.margin>
+                  <Insets bottom="65.0" right="65.0" />
+               </StackPane.margin>
+            </FontIcon>
          </children>
       </StackPane>
    </children>

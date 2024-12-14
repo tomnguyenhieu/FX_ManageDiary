@@ -117,12 +117,12 @@ public class ManageClassController extends App
         Files file = new Files();
         ResultSet rs = file.listClasses();
 
-        String teacherName = "";
-        int totalStudents = 0;
-
         try {
             while (rs.next())
             {
+                String teacherName = "";
+                int totalStudents = 0;
+
                 String className = rs.getString("name");
                 classId = rs.getInt("id");
 
