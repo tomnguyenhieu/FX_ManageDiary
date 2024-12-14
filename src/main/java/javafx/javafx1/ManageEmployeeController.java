@@ -27,53 +27,53 @@ import javafx.stage.StageStyle;
  *
  * @author Admin
  */
-public class ManageTeacherController extends App implements Initializable {
-    Teacher teacher = null;
+public class ManageEmployeeController extends App implements Initializable {
+    Person employee = null;
     Accounts acc = new Accounts();
     @FXML
-    private TableView<Teacher> teachersTable;
+    private TableView<Person> employeeTable;
     @FXML
-    private TableColumn<Teacher, String> idCol;
+    private TableColumn<Person, String> idCol;
     @FXML
-    private TableColumn<Teacher, String> nameCol;
+    private TableColumn<Person, String> nameCol;
     @FXML
-    private TableColumn<Teacher, String> ageCol;
+    private TableColumn<Person, String> ageCol;
     @FXML
-    private TableColumn<Teacher, String> genderCol;
+    private TableColumn<Person, String> genderCol;
     @FXML
-    private TableColumn<Teacher, String> emailCol;
+    private TableColumn<Person, String> emailCol;
     @FXML
-    private TableColumn<Teacher, String> passCol;
+    private TableColumn<Person, String> passCol;
     @FXML
-    private TableColumn<Teacher, String> phoneCol;
+    private TableColumn<Person, String> phoneCol;
     @FXML
-    private TableColumn<Teacher, String> addressCol;
+    private TableColumn<Person, String> addressCol;
     @FXML
-    private TableColumn<Teacher, String> certificateCol;
+    private TableColumn<Person, String> certificateCol;
     @FXML
-    private TableColumn<Teacher, String> salaryCol;
+    private TableColumn<Person, String> salaryCol;
     @FXML
-    private TableColumn<Teacher, String> statusCol;
+    private TableColumn<Person, String> statusCol;
 
     // Load table Teachers
     @FXML
-    public void refreshTableTeachers() {
-        final ObservableList<Teacher> TeacherList = FXCollections.observableArrayList();
-        ResultSet rs = acc.getTeachersInfo(2);
+    public void refreshTableEmployee() {
+        final ObservableList<Person> EmployeeList = FXCollections.observableArrayList();
+        ResultSet rs = acc.getTeachersInfo(3);
         try{
             while(rs.next()) {
-                TeacherList.add(new Teacher(
-                    rs.getInt("id"),
-                    rs.getString("name"),
-                    rs.getInt("age"),
-                    rs.getString("gender"),
-                    rs.getString("email"),
-                    rs.getString("password"),
-                    rs.getString("phone"),
-                    rs.getString("address"),
-                    rs.getString("certificates"),
-                    rs.getInt("salary"),
-                    rs.getInt("status")
+                EmployeeList.add(new Person(
+                        rs.getInt("id"),
+                        rs.getString("name"),
+                        rs.getInt("age"),
+                        rs.getString("gender"),
+                        rs.getString("email"),
+                        rs.getString("password"),
+                        rs.getString("phone"),
+                        rs.getString("address"),
+                        rs.getString("certificates"),
+                        rs.getInt("salary"),
+                        rs.getInt("status") == 1 ? "Đang hoạt động" : "Dừng hoạt động"
                 ));
             }
         } catch (Exception e) {
@@ -91,18 +91,17 @@ public class ManageTeacherController extends App implements Initializable {
         salaryCol.setCellValueFactory(new PropertyValueFactory<>("salary"));
         statusCol.setCellValueFactory(new PropertyValueFactory<>("status"));
 
-        teachersTable.setItems(TeacherList);
+        employeeTable.setItems(EmployeeList);
         System.out.println("refreshed!");
     }
-
-    // Add new Teacher
+    // Add new Employee
     @FXML
-    public void onAddTeacherClick() {
+    public void onAddEmployeeClick() {
         try {
-            FXMLLoader loader = new FXMLLoader(App.class.getResource("addTeacher.fxml"));
+            FXMLLoader loader = new FXMLLoader(App.class.getResource("addEmployee.fxml"));
             Parent root = loader.load();
-            AddTeacherController addTeacherController = loader.getController();
-            addTeacherController.setEdit(false);
+            AddEmployeeController addEmployeeController = loader.getController();
+            addEmployeeController.setEdit(false);
 
             Stage stage = new Stage();
             Scene scene = new Scene(root);
@@ -111,25 +110,26 @@ public class ManageTeacherController extends App implements Initializable {
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.show();
             stage.setOnCloseRequest((event) -> {
-                refreshTableTeachers();
+                refreshTableEmployee();
             });
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    public void onEditTeacherClick() {
-        // Lay thong tin student de hien len form
-        teacher = teachersTable.getSelectionModel().getSelectedItem();
-        if(teacher != null) {
-            System.out.println(teacher.getName());
+    public void onEditEmployeeClick() {
+        // Lay thong tin nhan vien de hien len form
+        employee = employeeTable.getSelectionModel().getSelectedItem();
+        if(employee != null) {
+            System.out.println(employee.getName());
             try {
-                FXMLLoader loader = new FXMLLoader(App.class.getResource("addTeacher.fxml"));
+                FXMLLoader loader = new FXMLLoader(App.class.getResource("addEmployee.fxml"));
                 Parent root = loader.load();
-                AddTeacherController addTeacherController = loader.getController();
-                addTeacherController.setTextField(teacher.getName(), teacher.getAge(), teacher.getGender(), teacher.getEmail(), teacher.getPassword(), teacher.getPhone(), teacher.getAddress(), teacher.getStatus(), teacher.getCertificate(), teacher.getSalary());
-                addTeacherController.setEdit(true);
-                addTeacherController.setTeacherId(teacher.getId());
+                AddEmployeeController addEmployeeController = loader.getController();
+                addEmployeeController.setTextField(employee.getName(), employee.getAge(), employee.getGender(), employee.getEmail(), employee.getPassword(), employee.getPhone(), employee.getAddress(),employee.getStatus(), employee.getCertificate(), employee.getSalary());
+                addEmployeeController.setEdit(true);
+                addEmployeeController.setEmployeeId(employee.getId());
+
 
                 Stage stage = new Stage();
                 Scene scene = new Scene(root);
@@ -138,7 +138,7 @@ public class ManageTeacherController extends App implements Initializable {
                 stage.initModality(Modality.APPLICATION_MODAL);
                 stage.show();
                 stage.setOnCloseRequest((event) -> {
-                    refreshTableTeachers();
+                    refreshTableEmployee();
                 });
             } catch (Exception e) {
                 throw new RuntimeException(e);
@@ -147,32 +147,33 @@ public class ManageTeacherController extends App implements Initializable {
             // chua chon student
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setHeaderText(null);
-            alert.setContentText("Chọn một giáo viên để sửa");
+            alert.setContentText("Chọn một nhân viên để sửa");
             alert.showAndWait();
         }
     }
-    
-    public void onDeleteTeacherClick(MouseEvent event){
+
+    public void onDeleteEmployeeClick(MouseEvent event){
         // Lay id student va bo vao ham xoa
-        teacher = teachersTable.getSelectionModel().getSelectedItem();
-        if(teacher != null){
-            int teacherId = teacher.getId();
-            acc.deleteTeacherById(teacherId);
-            refreshTableTeachers();
+        employee = employeeTable.getSelectionModel().getSelectedItem();
+        if(employee != null){
+            int employeeId = employee.getId();
+            acc.deleteTeacherById(employeeId);
+            refreshTableEmployee();
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setHeaderText(null);
-            alert.setContentText("Xóa giáo viên thành công");
+            alert.setContentText("Xóa nhân viên thành công");
             alert.showAndWait();
         } else{
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setHeaderText(null);
-            alert.setContentText("Chọn vào giáo viên để xóa!");
+            alert.setContentText("Chọn vào nhân viên để xóa!");
             alert.showAndWait();
         }
     }
-    
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        refreshTableTeachers();
+        refreshTableEmployee();
     }
 }
+

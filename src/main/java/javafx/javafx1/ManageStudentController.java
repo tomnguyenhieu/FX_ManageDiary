@@ -34,50 +34,50 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class ManageStudentController extends App implements Initializable {
-    Student student = null;
+    Person student = null;
     Accounts acc = new Accounts();
     double orgSceneX, orgSceneY, orgTranslateX, orgTranslateY;
     @FXML
-    private TableView<Student> studentsTable;
+    private TableView<Person> studentsTable;
     @FXML
-    private TableColumn<Student, String> idCol;
+    private TableColumn<Person, String> idCol;
     @FXML
-    private TableColumn<Student, String> nameCol;
+    private TableColumn<Person, String> nameCol;
     @FXML
-    private TableColumn<Student, String> ageCol;
+    private TableColumn<Person, String> ageCol;
     @FXML
-    private TableColumn<Student, String> genderCol;
+    private TableColumn<Person, String> genderCol;
     @FXML
-    private TableColumn<Student, String> emailCol;
+    private TableColumn<Person, String> emailCol;
     @FXML
-    private TableColumn<Student, String> passCol;
+    private TableColumn<Person, String> passCol;
     @FXML
-    private TableColumn<Student, String> phoneCol;
+    private TableColumn<Person, String> phoneCol;
     @FXML
-    private TableColumn<Student, String> addressCol;
+    private TableColumn<Person, String> addressCol;
     @FXML
-    private TableColumn<Student, String> pNameCol;
+    private TableColumn<Person, String> pNameCol;
     @FXML
-    private TableColumn<Student, String> pPhoneCol;
+    private TableColumn<Person, String> pPhoneCol;
     @FXML
-    private TableColumn<Student, String> pEmailCol;
+    private TableColumn<Person, String> pEmailCol;
     @FXML
-    private TableColumn<Student, String> feeCol;
+    private TableColumn<Person, String> feeCol;
     @FXML
-    private TableColumn<Student, String> classNameCol;
+    private TableColumn<Person, String> classNameCol;
     @FXML
-    private TableColumn<Student, String> statusCol;
+    private TableColumn<Person, String> statusCol;
 
 
 
     @FXML
     public void refreshTable() {
-        final ObservableList<Student> StudentList = FXCollections.observableArrayList();
+        final ObservableList<Person> StudentList = FXCollections.observableArrayList();
         Accounts acc = new Accounts();
         ResultSet rs = acc.studentsInfo();
         try{
             while(rs.next()) {
-                StudentList.add(new Student(
+                StudentList.add(new Person(
                         rs.getInt("id"),
                         rs.getString("name"),
                         rs.getInt("age"),
@@ -91,7 +91,7 @@ public class ManageStudentController extends App implements Initializable {
                         rs.getString("parents_email"),
                         rs.getInt("fee"),
                         rs.getString("classes.name"),
-                        checkStatus(rs.getInt("status"))
+                        rs.getInt("status") == 1 ? "Đang hoạt động" : "Dừng hoạt động"
                 ));
             }
         } catch (Exception e) {
@@ -116,13 +116,6 @@ public class ManageStudentController extends App implements Initializable {
         studentsTable.setItems(StudentList);
         System.out.println("refresh!!!!!!!!!");
         //studentsTable.getColumns().addAll(idCol,nameCol,ageCol,genderCol,emailCol,passCol,phoneCol,addressCol,pNameCol,pPhoneCol,pEmailCol,feeCol,classNameCol);
-    }
-    private String checkStatus(int status){
-        if(status == 1){
-            return "Đang hoạt động";
-        }else{
-            return "Dừng hoạt động";
-        }
     }
     @FXML
     private void onAddStudentClick(){
@@ -158,7 +151,7 @@ public class ManageStudentController extends App implements Initializable {
                 FXMLLoader loader = new FXMLLoader(App.class.getResource("add-student.fxml"));
                 Parent root = loader.load();
                 AddStudentController addStudentController = loader.getController();
-                addStudentController.setTextField(student.getName(), student.getAge(), student.getGender(), student.getEmail(), student.getPassword(), student.getPhone(), student.getAddress(), student.getClassName(), student.getPName(), student.getPPhone(), student.getPEmail(), student.getFee());
+                addStudentController.setTextField(student.getName(), student.getAge(), student.getGender(), student.getEmail(), student.getPassword(), student.getPhone(), student.getAddress(), student.getClassName(), student.getPName(), student.getPPhone(), student.getPEmail(), student.getFee(), student.getStatus());
                 addStudentController.setEdit(true);
                 addStudentController.setStudentId(student.getId());
 

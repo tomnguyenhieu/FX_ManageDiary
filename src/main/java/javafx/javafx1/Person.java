@@ -2,7 +2,7 @@ package javafx.javafx1;
 
 import javafx.beans.property.SimpleStringProperty;
 
-public class Student {
+public class Person {
 
     private int id;
     private SimpleStringProperty name;
@@ -18,8 +18,11 @@ public class Student {
     private int fee;
     private SimpleStringProperty className;
     private SimpleStringProperty status;
+    private SimpleStringProperty certificates;
+    private int salary;
 
-    public Student(int id, String name, int age, String gender, String email, String password, String phone, String address, String pName, String pPhone, String pEmail, int fee, String className, String status) {
+
+    public Person(int id, String name, int age, String gender, String email, String password, String phone, String address, String pName, String pPhone, String pEmail, int fee, String className, String status) {
         this.id = id;
         this.name = new SimpleStringProperty(name);
         this.age = age;
@@ -33,6 +36,19 @@ public class Student {
         this.pEmail = new SimpleStringProperty(pEmail);
         this.fee = fee;
         this.className = new SimpleStringProperty(className);
+        this.status = new SimpleStringProperty(status);
+    }
+    public Person(int id, String name, int age, String gender, String email, String password, String phone, String address, String certificates, int salary, String status) {
+        this.id = id;
+        this.name = new SimpleStringProperty(name);
+        this.age = age;
+        this.gender = new SimpleStringProperty(gender);
+        this.email = new SimpleStringProperty(email);
+        this.password = new SimpleStringProperty(password);
+        this.phone = new SimpleStringProperty(phone);
+        this.address = new SimpleStringProperty(address);
+        this.certificates = new SimpleStringProperty(certificates);
+        this.salary = salary;
         this.status = new SimpleStringProperty(status);
     }
 
@@ -77,6 +93,12 @@ public class Student {
     }
     public String getStatus() {
         return status.get();
+    }
+    public String getCertificate() {
+        return certificates.get();
+    }
+    public int getSalary() {
+        return salary;
     }
 
 }

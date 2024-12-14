@@ -73,9 +73,9 @@ public class Accounts
             System.out.println(e);
         }
     }
-    public void addStudent(String name, int age, String gender, String email, String pass, String phone, String address, String pName, String pPhone, String pEmail, int fee, String className){
+    public void addStudent(String name, int age, String gender, String email, String pass, String phone, String address, String pName, String pPhone, String pEmail, int fee, String className, int status){
         String sql = "INSERT INTO accounts (name, age, gender, email, password, role, phone, address, class_id, parents_name, parents_phone, parents_email, fee, status)" +
-                     " VALUE (?,?,?,?,?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                     " VALUE (?,?,?,?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try {
             PreparedStatement ps = connect.prepareStatement(sql);
             ps.setString(1, name);
@@ -91,15 +91,15 @@ public class Accounts
             ps.setString(11, pPhone);
             ps.setString(12, pEmail);
             ps.setInt(13, fee);
-            ps.setInt(14, 1);
+            ps.setInt(14, status);
             ps.execute();
         } catch (Exception e) {
             System.out.println(e);
         }
     }
-    public void editStudent(String name, int age, String gender, String email, String pass, String phone, String address, String pName, String pPhone, String pEmail, int fee, String className, int id){
+    public void editStudent(String name, int age, String gender, String email, String pass, String phone, String address, String pName, String pPhone, String pEmail, int fee, String className, int status, int id){
         String sql = "UPDATE accounts " +
-                "SET NAME = ?, age = ?, gender = ?, email = ?, PASSWORD = ?, phone = ?, address = ?, parents_name = ?, parents_phone = ?, parents_email = ?, fee = ?, class_id = ? WHERE id = ?";
+                "SET NAME = ?, age = ?, gender = ?, email = ?, PASSWORD = ?, phone = ?, address = ?, parents_name = ?, parents_phone = ?, parents_email = ?, fee = ?, class_id = ?, status = ? WHERE id = ?";
         try {
             PreparedStatement ps = connect.prepareStatement(sql);
             ps.setString(1, name);
@@ -114,7 +114,8 @@ public class Accounts
             ps.setString(10, pEmail);
             ps.setInt(11, fee);
             ps.setInt(12, getClassId(className));
-            ps.setInt(13, id);
+            ps.setInt(13, status);
+            ps.setInt(14, id);
             ps.execute();
         } catch (Exception e) {
             System.out.println(e);
@@ -122,8 +123,8 @@ public class Accounts
     }
 
     // Get Teachers info
-    public ResultSet getTeachersInfo() {
-        String sql = "SELECT * FROM accounts WHERE role = 2";
+    public ResultSet getTeachersInfo(int role) {
+        String sql = "SELECT * FROM accounts WHERE role = '"+role+"'";
         try {
             PreparedStatement ps = connect.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
@@ -133,4 +134,106 @@ public class Accounts
             return null;
         }
     }
+
+    // Ađ new teacher
+    public void addTeacher(String name, int age, String gender, String email, String password, String phone, String address, int status, String certificate, int salary){
+        String sql = "INSERT INTO accounts (name, age, gender, email, password, role, phone, address, status, certificates, salary)" +
+                     " VALUE (?,?,?,?,?, ?, ?, ?, ?, ?, ?)";
+        try {
+            PreparedStatement ps = connect.prepareStatement(sql);
+            ps.setString(1, name);
+            ps.setInt(2, age);
+            ps.setString(3, gender);
+            ps.setString(4, email);
+            ps.setString(5, password);
+            ps.setInt(6, 2);
+            ps.setString(7, phone);
+            ps.setString(8, address);
+            ps.setInt(9, status);
+            ps.setString(10, certificate);
+            ps.setInt(11, salary);
+            ps.execute();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+
+    // Edit teacher
+    public void editTeacher(String name, int age, String gender, String email, String password, String phone, String address, int status, String certificate, int salary){
+        String sql = "UPDATE accounts " +
+                "SET NAME = ?, age = ?, gender = ?, email = ?, PASSWORD = ?, phone = ?, address = ?, status = ?, certificates = ?, salary = ? WHERE id = ?";
+        try {
+            PreparedStatement ps = connect.prepareStatement(sql);
+            ps.setString(1, name);
+            ps.setInt(2, age);
+            ps.setString(3, gender);
+            ps.setString(4, email);
+            ps.setString(5, password);
+            ps.setString(6, phone);
+            ps.setString(7, address);
+            ps.setInt(8, status);
+            ps.setString(9, certificate);
+            ps.setInt(10, salary);
+            ps.execute();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+
+    public void deleteTeacherById(int teacherId){
+        String sql = "UPDATE accounts SET STATUS = 2 WHERE id = '"+teacherId+"'";
+        try {
+            PreparedStatement ps = connect.prepareStatement(sql);
+            ps.execute();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+
+    public void addEmployee(String name, int age, String gender, String email, String password, String phone, String address, String certificate, int salary){
+        String sql = "INSERT INTO accounts (name, age, gender, email, password, role, phone, address, status, certificates, salary)" +
+                " VALUE (?,?,?,?,?, ?, ?, ?, ?, ?, ?)";
+        try {
+            PreparedStatement ps = connect.prepareStatement(sql);
+            ps.setString(1, name);
+            ps.setInt(2, age);
+            ps.setString(3, gender);
+            ps.setString(4, email);
+            ps.setString(5, password);
+            ps.setInt(6, 3);
+            ps.setString(7, phone);
+            ps.setString(8, address);
+            ps.setInt(9, 1);
+            ps.setString(10, certificate);
+            ps.setInt(11, salary);
+            ps.execute();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+
+    public void editEmployeeById(String name, int age, String gender, String email, String password, String phone, String address, int status, String certificate, int salary, int id){
+        String sql = "UPDATE accounts " +
+                "SET NAME = ?, age = ?, gender = ?, email = ?, PASSWORD = ?, phone = ?, address = ?, status = ?, certificates = ?, salary = ? WHERE id = ?";
+        try {
+            PreparedStatement ps = connect.prepareStatement(sql);
+            ps.setString(1, name);
+            ps.setInt(2, age);
+            ps.setString(3, gender);
+            ps.setString(4, email);
+            ps.setString(5, password);
+            ps.setString(6, phone);
+            ps.setString(7, address);
+            ps.setInt(8, status);
+            ps.setString(9, certificate);
+            ps.setInt(10, salary);
+            ps.setInt(11, id);
+            ps.execute();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+
+
+
 }

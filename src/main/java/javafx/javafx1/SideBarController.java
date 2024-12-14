@@ -73,6 +73,11 @@ public class SideBarController extends App implements Initializable
                 break;
             case "teacherBtn":
                 sceneName = "ManageTeacherScene";
+                break;
+            case "employeeBtn":
+                sceneName = "ManageEmployeeScene";
+                break;
+
         }
         return sceneName;
     }

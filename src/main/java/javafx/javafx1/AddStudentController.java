@@ -14,6 +14,8 @@ import javafx.stage.WindowEvent;
 import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class AddStudentController extends App implements Initializable {
@@ -44,7 +46,7 @@ public class AddStudentController extends App implements Initializable {
     @FXML
     TextField phoneFld;
     @FXML
-    TextField addressFld;
+    ComboBox addressCb;
     @FXML
     ComboBox classCb;
     @FXML
@@ -55,6 +57,8 @@ public class AddStudentController extends App implements Initializable {
     TextField pEmailFld;
     @FXML
     TextField pFeeFld;
+    @FXML
+    ComboBox statusCb;
 
 
 
@@ -77,8 +81,26 @@ public class AddStudentController extends App implements Initializable {
         while (rsClass.next()){
             classCb.getItems().add(rsClass.getString("name"));
         }
+        statusCb.getItems().add("Đang hoạt động");
+        statusCb.getItems().add("Dừng hoạt động");
+        List<String> cityLst = Arrays.asList(
+                "Hà Nội", "Hải Phòng", "Hồ Chí Minh", "Đà Nẵng", "Cần Thơ",
+                "Bắc Ninh", "Hà Nam", "Hải Dương", "Hưng Yên", "Nam Định",
+                "Ninh Bình", "Thái Bình", "Vĩnh Phúc", "Quảng Ninh", "Lào Cai",
+                "Yên Bái", "Điện Biên", "Lai Châu", "Sơn La", "Hòa Bình",
+                "Thái Nguyên", "Tuyên Quang", "Phú Thọ", "Bắc Giang", "Bắc Kạn",
+                "Cao Bằng", "Lạng Sơn", "Hà Giang", "Thanh Hóa", "Nghệ An",
+                "Hà Tĩnh", "Quảng Bình", "Quảng Trị", "Thừa Thiên Huế", "Quảng Nam",
+                "Quảng Ngãi", "Bình Định", "Phú Yên", "Khánh Hòa", "Ninh Thuận",
+                "Bình Thuận", "Kon Tum", "Gia Lai", "Đắk Lắk", "Đắk Nông",
+                "Lâm Đồng", "Bình Phước", "Tây Ninh", "Bình Dương", "Đồng Nai",
+                "Bà Rịa - Vũng Tàu", "Long An", "Tiền Giang", "Bến Tre", "Trà Vinh",
+                "Vĩnh Long", "Đồng Tháp", "An Giang", "Kiên Giang", "Hậu Giang",
+                "Sóc Trăng", "Bạc Liêu", "Cà Mau"
+        );
+        addressCb.getItems().addAll(cityLst);
     }
-    public void setTextField(String name, int age, String gender, String email, String pass, String phone, String address, String className, String pName, String pPhone, String pEmail, int fee){
+    public void setTextField(String name, int age, String gender, String email, String pass, String phone, String address, String className, String pName, String pPhone, String pEmail, int fee, String status){
         // khoi tao thong tin dien san trong form
         nameFld.setText(name);
         ageCb.setValue(age);
@@ -86,12 +108,13 @@ public class AddStudentController extends App implements Initializable {
         emailFld.setText(email);
         passFld.setText(pass);
         phoneFld.setText(phone);
-        addressFld.setText(address);
+        addressCb.setValue(address);
         classCb.setValue(className);
         pNameFld.setText(pName);
         pPhoneFld.setText(pPhone);
         pEmailFld.setText(pEmail);
         pFeeFld.setText(String.valueOf(fee));
+        statusCb.setValue(status);
     }
     public void onConfirmClick(ActionEvent event){
         if(ageCb.getValue() != null && genderCb.getValue() != null && classCb.getValue() != null){
@@ -102,12 +125,13 @@ public class AddStudentController extends App implements Initializable {
             String email = emailFld.getText();
             String pass = passFld.getText();
             String phone = phoneFld.getText();
-            String address = addressFld.getText();
+            String address = addressCb.getValue().toString();
             String className = classCb.getValue().toString();
             String pName = pNameFld.getText();
             String pPhone = pPhoneFld.getText();
             String pEmail = pEmailFld.getText();
             int fee = Integer.parseInt(pFeeFld.getText());
+            int status = (statusCb.getValue().toString().equals("Đang hoạt động")) ? 1 : 2;
             if(name.isEmpty() || gender.isEmpty() || email.isEmpty() || pass.isEmpty() || address.isEmpty() || pName.isEmpty() || pPhone.isEmpty() || pEmail.isEmpty()){
                 // Nhap thieu thong tin
                 Alert alert = new Alert(Alert.AlertType.WARNING);
@@ -117,7 +141,7 @@ public class AddStudentController extends App implements Initializable {
             } else {
                 if(!edit){
                     // tao moi student
-                    acc.addStudent(name,Integer.parseInt(age),gender,email,pass,phone,address,pName,pPhone,pEmail,fee,className);
+                    acc.addStudent(name,Integer.parseInt(age),gender,email,pass,phone,address,pName,pPhone,pEmail,fee,className,status);
                     close(event);
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);
                     alert.setHeaderText(null);
@@ -125,7 +149,7 @@ public class AddStudentController extends App implements Initializable {
                     alert.showAndWait();
                 } else{
                     // chinh sua student
-                    acc.editStudent(name,Integer.parseInt(age),gender,email,pass,phone,address,pName,pPhone,pEmail,fee,className, studentId);
+                    acc.editStudent(name,Integer.parseInt(age),gender,email,pass,phone,address,pName,pPhone,pEmail,fee,className, status, studentId);
                     close(event);
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);
                     alert.setHeaderText(null);
