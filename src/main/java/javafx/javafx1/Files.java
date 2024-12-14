@@ -134,7 +134,7 @@ public class Files
     }
     public ResultSet listClasses()
     {
-        String sql = "SELECT * FROM classes";
+        String sql = "SELECT * FROM classes WHERE deleted = 1";
         PreparedStatement ps;
         try {
             ps = connect.prepareStatement(sql);
@@ -163,12 +163,13 @@ public class Files
     }
     public boolean storeClass(String className, int teacherId)
     {
-        String sql = "INSERT INTO classes(teacher_id, name) VALUES(?, ?)";
+        String sql = "INSERT INTO classes(teacher_id, name, deleted) VALUES(?, ?, ?)";
         PreparedStatement ps;
         try {
             ps = connect.prepareStatement(sql);
             ps.setInt(1, teacherId);
             ps.setString(2, className);
+            ps.setInt(3, 1);
             ps.executeUpdate();
             return true;
         } catch (Exception e) {
@@ -219,30 +220,10 @@ public class Files
     }
     public void deleteClass(int classId)
     {
-        String sql1 = "DELETE FROM lessons WHERE class_id = '" +classId+ "'";
+        String sql = "UPDATE classes SET deleted = 2 WHERE id = " + classId;
+        PreparedStatement ps;
         try {
-            PreparedStatement ps = connect.prepareStatement(sql1);
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        String sql2 = "DELETE FROM comments WHERE class_id = '" +classId+ "'";
-        try {
-            PreparedStatement ps = connect.prepareStatement(sql2);
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        String sql3 = "DELETE FROM accounts WHERE class_id = '" +classId+ "'";
-        try {
-            PreparedStatement ps = connect.prepareStatement(sql3);
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        String sql4 = "DELETE FROM classes WHERE id = '" +classId+ "'";
-        try {
-            PreparedStatement ps = connect.prepareStatement(sql4);
+            ps = connect.prepareStatement(sql);
             ps.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);

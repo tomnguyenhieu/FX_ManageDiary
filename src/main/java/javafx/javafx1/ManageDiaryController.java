@@ -13,7 +13,9 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -38,7 +40,8 @@ public class ManageDiaryController extends App
     private String className = "";
     private String commentStudentName = "";
     private String commentStudentComment = "";
-
+    public Files uploadFile = new Files();
+    private boolean isConfirm = false;
     private int countGlobal = 0;
     private int classIdGlobal = 0;
 
@@ -233,7 +236,6 @@ public class ManageDiaryController extends App
         lessonBtn.setStyle("-fx-background-color: #D9D9D9; -fx-font-size: 20");
         lessonBtn.setTextFill(Color.BLACK);
 
-
         lessonBtn.addEventHandler(MouseEvent.MOUSE_CLICKED, this::onMouseClickGetTblCommentsByLessonName);
 
         lessonsContainer.getChildren().add(lessonBtn);
@@ -266,12 +268,24 @@ public class ManageDiaryController extends App
             btn.setTextFill(Color.BLACK);
             btn.setStyle("-fx-background-color: #D9D9D9; -fx-font-size: 20");
         }
+
+        if (!lessonsContainer.getChildren().isEmpty())
+        {
+            Button btn = (Button) lessonsContainer.getChildren().getLast();
+
+            btn.setTextFill(Color.BLACK);
+            btn.setStyle("-fx-background-color: #D9D9D9; -fx-font-size: 20");
+        }
     }
     public void loadLessons(int classId)
     {
         this.classIdGlobal = classId;
         countGlobal = displayLessons(classId) + 1;
         resetAllBtn(countGlobal);
+    }
+    public void reloadListLessons()
+    {
+        lessonsContainer.getChildren().clear();
     }
 
     // Xu ly event
@@ -286,46 +300,54 @@ public class ManageDiaryController extends App
 
         ArrayList<List<String>> listExcelComment = readExcelComment(file);
 
-        Files uploadFile = new Files();
         int classId = uploadFile.getClassId(classValue);
+        String fileName = file.getName();
+        Stage stage = new Stage();
+        FXMLLoader loader;
+        ConfirmUploadController confirmUploadController;
+        try {
+            loader = new FXMLLoader(getClass().getResource("ConfirmUploadScene.fxml"));
+            Parent root = loader.load();
 
-        addLessonBtn(countGlobal);
+            confirmUploadController = loader.getController();
+            confirmUploadController.parseFileName(fileName);
+            confirmUploadController.parseCountGlobal(countGlobal);
+            confirmUploadController.parseLessonsContainerGlobal(lessonsContainer);
 
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.initStyle(StageStyle.TRANSPARENT);
+            stage.initModality(Modality.APPLICATION_MODAL);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        // check file bi trung
         if (!checkDuplicate(listExcelContent))
         {
-            boolean isUploaded = uploadFile.storeExcelInfo(classId, titleValue, contentValue);
-            if (!isUploaded)
-            {
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setContentText("Upload that bai!");
-                alert.show();
-                return;
-            }
+            stage.show();
+            stage.setOnCloseRequest((event) -> {
+                isConfirm = confirmUploadController.getConfirm();
+                System.out.println(isConfirm);
+                if (isConfirm)
+                {
+                    uploadFile.storeExcelInfo(classId, titleValue, contentValue);
 
-            for (List<String> item : listExcelComment)
-            {
-                int studentId = Integer.parseInt(item.get(0));
-                String studentComment = item.get(2);
+                    for (List<String> item : listExcelComment)
+                    {
+                        int studentId = Integer.parseInt(item.get(0));
+                        String studentComment = item.get(2);
 
-                uploadFile.storeExcelComment(studentId, titleValue, studentComment);
-            }
+                        uploadFile.storeExcelComment(studentId, titleValue, studentComment);
+                    }
 
-            countGlobal += 1;
-
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setContentText("Upload thanh cong!");
-            alert.show();
-
-            Button btn = (Button)lessonsContainer.getChildren().getLast();
-
-            resetAllBtn(countGlobal);
-
-            btn.setTextFill(Color.WHITE);
-            btn.setStyle("-fx-background-color: #F05454; -fx-font-size: 20");
-
-            loadTable1Comment(uploadFile.findLessonByTitle(titleValue));
-            loadTable2Comment(uploadFile.findLessonByTitle(titleValue));
-
+                    addLessonBtn(countGlobal);
+                    reloadListLessons();
+                    displayLessons(classIdGlobal);
+                    loadTable1Comment(uploadFile.findLessonByTitle(titleValue));
+                    loadTable2Comment(uploadFile.findLessonByTitle(titleValue));
+                }
+            });
         } else {
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setContentText("File bi trung!");
@@ -367,19 +389,5 @@ public class ManageDiaryController extends App
 
         btn.setTextFill(Color.WHITE);
         btn.setStyle("-fx-background-color: #F05454; -fx-font-size: 20");
-    }
-    public void backToClassScene(ActionEvent event)
-    {
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("ManageClassScene.fxml"));
-            Parent root = fxmlLoader.load();
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            Scene indexScene = new Scene(root, 1280, 720);
-
-            stage.setScene(indexScene);
-            stage.show();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
     }
 }

@@ -151,8 +151,12 @@ public class ManageClassController extends App
         Label classLabel = (Label) event.getSource();
         String className = classLabel.getText();
 
+        System.out.println(className);
+
         Files file = new Files();
         classId = file.getClassId(className);
+
+        System.out.println(classId);
 
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("ManageDiaryScene.fxml"));
@@ -249,8 +253,6 @@ public class ManageClassController extends App
         System.out.println(classLabel.getText());
 
         int classId = files.getClassId(classLabel.getText());
-
-        System.out.println(classId);
 
         files.deleteClass(classId);
 
