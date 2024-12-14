@@ -196,7 +196,7 @@ public class Files
     }
     public ResultSet getTeachersName()
     {
-        String sql = "SELECT * FROM accounts WHERE role = 2";
+        String sql = "SELECT * FROM accounts WHERE role = 2 AND status = 1";
         PreparedStatement ps;
         try {
             ps = connect.prepareStatement(sql);
