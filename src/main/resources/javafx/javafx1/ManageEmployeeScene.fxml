@@ -16,9 +16,9 @@
     <children>
         <HBox alignment="BOTTOM_LEFT" layoutX="23.0" layoutY="14.0" prefHeight="84.0" prefWidth="954.0">
             <children>
-                <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="84.0" prefWidth="672.0" style="-fx-background-color: F5F5F5;" text="DANH SÁCH NHÂN VIÊN" textAlignment="CENTER" wrapText="true">
+                <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="84.0" prefWidth="672.0" style="-fx-background-color: F5F5F5;" text="DANH SÁCH NHÂN VIÊN" textAlignment="CENTER" textFill="#30475e" wrapText="true">
                     <font>
-                        <Font size="42.0" />
+                        <Font name="System Bold" size="42.0" />
                     </font>
                 </Label>
                 <HBox alignment="CENTER_LEFT" fillHeight="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#onEditEmployeeClick" prefHeight="44.0" prefWidth="124.0" style="-fx-background-color: #30475E; -fx-background-radius: 10;">
@@ -69,7 +69,7 @@
                 </HBox>
             </children>
         </HBox>
-        <TableView fx:id="employeeTable" layoutX="25.0" layoutY="107.0" prefHeight="559.0" prefWidth="950.0" style="-fx-background-color: F5F5F5;">
+        <TableView fx:id="employeeTable" layoutX="23.0" layoutY="107.0" prefHeight="600.0" prefWidth="954.0" style="-fx-background-color: F5F5F5;">
             <columns>
                 <TableColumn fx:id="idCol" prefWidth="30.333332061767578" text="Id" />
                 <TableColumn fx:id="nameCol" prefWidth="171.0" text="Ho va ten" />

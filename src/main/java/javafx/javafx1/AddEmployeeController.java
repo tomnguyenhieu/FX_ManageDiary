@@ -7,6 +7,8 @@ package javafx.javafx1;
 import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.List;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -51,7 +53,7 @@ public class AddEmployeeController extends App implements Initializable {
     @FXML
     TextField phoneFld;
     @FXML
-    TextField addressFld;
+    ComboBox addressCb;
     @FXML
     TextField certificateFld;
     @FXML
@@ -75,6 +77,22 @@ public class AddEmployeeController extends App implements Initializable {
         }
         statusCb.getItems().add("Đang hoạt động");
         statusCb.getItems().add("Dừng hoạt động");
+        List<String> cityLst = Arrays.asList(
+                "Hà Nội", "Hải Phòng", "Hồ Chí Minh", "Đà Nẵng", "Cần Thơ",
+                "Bắc Ninh", "Hà Nam", "Hải Dương", "Hưng Yên", "Nam Định",
+                "Ninh Bình", "Thái Bình", "Vĩnh Phúc", "Quảng Ninh", "Lào Cai",
+                "Yên Bái", "Điện Biên", "Lai Châu", "Sơn La", "Hòa Bình",
+                "Thái Nguyên", "Tuyên Quang", "Phú Thọ", "Bắc Giang", "Bắc Kạn",
+                "Cao Bằng", "Lạng Sơn", "Hà Giang", "Thanh Hóa", "Nghệ An",
+                "Hà Tĩnh", "Quảng Bình", "Quảng Trị", "Thừa Thiên Huế", "Quảng Nam",
+                "Quảng Ngãi", "Bình Định", "Phú Yên", "Khánh Hòa", "Ninh Thuận",
+                "Bình Thuận", "Kon Tum", "Gia Lai", "Đắk Lắk", "Đắk Nông",
+                "Lâm Đồng", "Bình Phước", "Tây Ninh", "Bình Dương", "Đồng Nai",
+                "Bà Rịa - Vũng Tàu", "Long An", "Tiền Giang", "Bến Tre", "Trà Vinh",
+                "Vĩnh Long", "Đồng Tháp", "An Giang", "Kiên Giang", "Hậu Giang",
+                "Sóc Trăng", "Bạc Liêu", "Cà Mau"
+        );
+        addressCb.getItems().addAll(cityLst);
     }
     public void setTextField(String name, int age, String gender, String email, String password, String phone, String address, String status, String certificate, int salary){
         // khoi tao thong tin dien san trong form
@@ -84,7 +102,7 @@ public class AddEmployeeController extends App implements Initializable {
         emailFld.setText(email);
         passFld.setText(password);
         phoneFld.setText(phone);
-        addressFld.setText(address);
+        addressCb.setValue(address);
         certificateFld.setText(certificate);
         salaryFld.setText(String.valueOf(salary));
         statusCb.setValue(status);
@@ -98,7 +116,7 @@ public class AddEmployeeController extends App implements Initializable {
             String email = emailFld.getText();
             String pass = passFld.getText();
             String phone = phoneFld.getText();
-            String address = addressFld.getText();
+            String address = addressCb.getValue().toString();
             int status = (statusCb.getValue().toString().equals("Đang hoạt động")) ? 1 : 2;
             String certificate = certificateFld.getText();
             int salary = Integer.parseInt(salaryFld.getText());
