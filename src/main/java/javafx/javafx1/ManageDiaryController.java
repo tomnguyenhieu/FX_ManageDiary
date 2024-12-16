@@ -436,7 +436,7 @@ public class ManageDiaryController extends App
         }
 
         Files file = new Files();
-        ResultSet rs = file.getCommentInfoByLessonId(_lessonId);
+        ResultSet rs = file.getCommentByLessonId(_lessonId);
 
         ArrayList<List<String>> classComments = new ArrayList<>();
 
@@ -474,43 +474,80 @@ public class ManageDiaryController extends App
             throw new RuntimeException(e);
         }
 
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("Excel file", "*.xlsx")
-        );
-        File saveFile = fileChooser.showSaveDialog(stage);
+        if (_lessonId != 0)
+        {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.getExtensionFilters().addAll(
+                    new FileChooser.ExtensionFilter("Excel file", "*.xlsx")
+            );
+            File saveFile = fileChooser.showSaveDialog(stage);
 
-        String filePath = saveFile.getPath();
-        try {
-            XSSFWorkbook workbook = new XSSFWorkbook();
-            XSSFSheet sheet = workbook.createSheet("Sheet1");
+            String filePath = saveFile.getPath();
+            try {
+                XSSFWorkbook workbook = new XSSFWorkbook();
+                XSSFSheet sheet = workbook.createSheet("Sheet1");
 
-            for (int i = 0; i < classComments.size(); i++)
-            {
-                XSSFRow row = sheet.createRow(i);
-                List<String> rowData = classComments.get(i);
-                for (int j = 0; j < rowData.size(); j++)
+                XSSFRow titleRow = sheet.createRow(0);
+                XSSFCell titleCell = titleRow.createCell(0);
+                titleCell.setCellValue("Thời gian");
+                XSSFCell titleCellValue = titleRow.createCell(1);
+                titleCellValue.setCellValue(commentInfo.get(1));
+
+                XSSFRow contentRow = sheet.createRow(1);
+                XSSFCell contentCell = contentRow.createCell(0);
+                contentCell.setCellValue("Nội dung bài học");
+                XSSFCell contentCellValue = contentRow.createCell(1);
+                contentCellValue.setCellValue(commentInfo.getLast());
+
+                XSSFRow classRow = sheet.createRow(2);
+                XSSFCell classCell = classRow.createCell(0);
+                classCell.setCellValue("Lớp");
+                XSSFCell classCellValue = classRow.createCell(1);
+                classCellValue.setCellValue(commentInfo.getFirst());
+
+                XSSFRow labelRow = sheet.createRow(3);
+                XSSFCell labelSTT = labelRow.createCell(0);
+                labelSTT.setCellValue("STT");
+                XSSFCell labelName = labelRow.createCell(1);
+                labelName.setCellValue("Tên");
+                XSSFCell labelComment = labelRow.createCell(2);
+                labelComment.setCellValue("Nhận xét");
+
+                for (int i = 0; i < classComments.size(); i++)
                 {
-                    XSSFCell cell = row.createCell(j);
-                    cell.setCellValue(rowData.get(j));
+                    XSSFRow row = sheet.createRow(i + 4);
+
+                    XSSFCell idCell = row.createCell(0);
+                    idCell.setCellValue(i + 1);
+
+                    List<String> rowData = classComments.get(i);
+                    for (int j = 0; j < rowData.size(); j++)
+                    {
+                        XSSFCell cell = row.createCell(j + 1);
+                        cell.setCellValue(rowData.get(j));
+                    }
                 }
-            }
-            try (FileOutputStream fileOut = new FileOutputStream(filePath)) {
-                workbook.write(fileOut);
+                try (FileOutputStream fileOut = new FileOutputStream(filePath)) {
+                    workbook.write(fileOut);
 
+                    Alert alert = new Alert(Alert.AlertType.WARNING);
+                    alert.setContentText("Export thanh cong!");
+                    alert.show();
+                }
+
+            } catch (Exception e) {
                 Alert alert = new Alert(Alert.AlertType.WARNING);
-                alert.setContentText("Export thanh cong!");
+                alert.setContentText("Export that bai!");
                 alert.show();
+
+                throw new RuntimeException(e);
             }
-
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+        } else
+        {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setContentText("Vui long chon lesson de export");
+            alert.show();
         }
-
-//        for (String info : commentInfo)
-//        {
-//            System.out.println(info);
-//        }
 //
 //        for (List<String> comment : classComments)
 //        {

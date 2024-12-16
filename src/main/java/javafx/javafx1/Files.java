@@ -229,7 +229,7 @@ public class Files
             throw new RuntimeException(e);
         }
     }
-    public ResultSet getCommentInfoByLessonId(int lessonId)
+    public ResultSet getCommentByLessonId(int lessonId)
     {
         String sql = "SELECT accounts.name, comments.comment "
                 + "FROM comments JOIN accounts "
