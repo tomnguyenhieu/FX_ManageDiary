@@ -229,5 +229,50 @@ public class Files
             throw new RuntimeException(e);
         }
     }
+    public ResultSet getCommentInfoByLessonId(int lessonId)
+    {
+        String sql = "SELECT accounts.name, comments.comment "
+                + "FROM comments JOIN accounts "
+                + "ON comments.student_id = accounts.id "
+                + "WHERE lesson_id = " + lessonId;
+        PreparedStatement ps;
+        try {
+            ps = connect.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            return rs;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public ResultSet getCommentTitleByLessonId(int lessonId)
+    {
+        String sql = "SELECT * FROM lessons WHERE id = " + lessonId;
+        PreparedStatement ps;
+        try {
+            ps = connect.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            return rs;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public String getClassNameByClassId(int classId)
+    {
+        String sql = "SELECT name FROM classes WHERE id = " + classId;
+        PreparedStatement ps;
 
+        String className = "";
+        try {
+            ps = connect.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next())
+            {
+                className = rs.getString("name");
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        return className;
+    }
 }

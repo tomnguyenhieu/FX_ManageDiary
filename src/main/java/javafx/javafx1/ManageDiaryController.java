@@ -10,6 +10,9 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
@@ -20,10 +23,11 @@ import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.sql.Array;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -31,6 +35,8 @@ import java.util.List;
 import javafx.event.ActionEvent;
 
 import javafx.scene.control.cell.PropertyValueFactory;
+
+import javax.security.auth.login.AccountNotFoundException;
 
 public class ManageDiaryController extends App
 {
@@ -44,6 +50,7 @@ public class ManageDiaryController extends App
     private boolean isConfirm = false;
     private int countGlobal = 0;
     private int classIdGlobal = 0;
+    private List<Integer> listLessonId = new ArrayList<>();
 
     @FXML
     private TableView<Comment> tblComment1;
@@ -159,6 +166,7 @@ public class ManageDiaryController extends App
         try {
             FileInputStream fs = new FileInputStream(file.getPath());
             XSSFWorkbook workbook = new XSSFWorkbook(fs);
+
             XSSFSheet sheet = workbook.getSheetAt(0);
 
             int rows = sheet.getLastRowNum();
@@ -363,15 +371,17 @@ public class ManageDiaryController extends App
 
         int btnLessonId = Integer.parseInt(text.substring(7));
 
-        List<Integer> listLessonId = new ArrayList<>();
-
         ResultSet rs = file.listLessonsByClassId(classIdGlobal);
 
         try {
             while (rs.next())
             {
                 int lessonId = rs.getInt("id");
-                listLessonId.add(lessonId);
+
+                if (!listLessonId.contains(lessonId))
+                {
+                    listLessonId.add(lessonId);
+                }
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -389,5 +399,122 @@ public class ManageDiaryController extends App
 
         btn.setTextFill(Color.WHITE);
         btn.setStyle("-fx-background-color: #F05454; -fx-font-size: 20");
+    }
+    public void onActionExportExcel(ActionEvent event)
+    {
+        Button button = (Button) event.getSource();
+        StackPane stackPane = (StackPane) button.getParent();
+        AnchorPane anchorPane = (AnchorPane) stackPane.getParent();
+        VBox vbox = (VBox) anchorPane.getChildren().getFirst();
+        HBox hbox = (HBox) vbox.getChildren().getLast();
+        ScrollPane scrollPane = (ScrollPane) hbox.getChildren().getFirst();
+        VBox lessonContainer = (VBox) scrollPane.getContent();
+
+        List<Button> btnLessonsList = new ArrayList<>();
+        for (int i = 0; i < listLessonId.size(); i++)
+        {
+            Button btn = (Button) lessonContainer.getChildren().get(i);
+            btnLessonsList.add(btn);
+        }
+
+        int btnNum = 0;
+        for (Button btn : btnLessonsList)
+        {
+            if (btn.getStyle().contains("-fx-background-color: #F05454"))
+            {
+                btnNum = Integer.parseInt(btn.getText().substring(7));
+            }
+        }
+
+        int _lessonId = 0;
+        for (int i = 0; i <= listLessonId.size(); i++)
+        {
+            if (i == (btnNum - 1))
+            {
+                _lessonId = listLessonId.get(i);
+            }
+        }
+
+        Files file = new Files();
+        ResultSet rs = file.getCommentInfoByLessonId(_lessonId);
+
+        ArrayList<List<String>> classComments = new ArrayList<>();
+
+        try {
+            while (rs.next())
+            {
+                List<String> tmpList = new ArrayList<>();
+                String studentName = rs.getString("name");
+                String studentComment = rs.getString("comment");
+
+                tmpList.add(studentName);
+                tmpList.add(studentComment);
+
+                classComments.add(tmpList);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        ResultSet rs1 = file.getCommentTitleByLessonId(_lessonId);
+        List<String> commentInfo = new ArrayList<>();
+        try {
+            while (rs1.next())
+            {
+                Integer classId = rs1.getInt("class_id");
+                String className = file.getClassNameByClassId(classId);
+                String title = rs1.getString("title");
+                String content = rs1.getString("content");
+
+                commentInfo.add(className);
+                commentInfo.add(title);
+                commentInfo.add(content);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("Excel file", "*.xlsx")
+        );
+        File saveFile = fileChooser.showSaveDialog(stage);
+
+        String filePath = saveFile.getPath();
+        try {
+            XSSFWorkbook workbook = new XSSFWorkbook();
+            XSSFSheet sheet = workbook.createSheet("Sheet1");
+
+            for (int i = 0; i < classComments.size(); i++)
+            {
+                XSSFRow row = sheet.createRow(i);
+                List<String> rowData = classComments.get(i);
+                for (int j = 0; j < rowData.size(); j++)
+                {
+                    XSSFCell cell = row.createCell(j);
+                    cell.setCellValue(rowData.get(j));
+                }
+            }
+            try (FileOutputStream fileOut = new FileOutputStream(filePath)) {
+                workbook.write(fileOut);
+
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setContentText("Export thanh cong!");
+                alert.show();
+            }
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+//        for (String info : commentInfo)
+//        {
+//            System.out.println(info);
+//        }
+//
+//        for (List<String> comment : classComments)
+//        {
+//            System.out.println(comment);
+//        }
     }
 }

@@ -12,7 +12,7 @@
 <?import javafx.scene.text.Font?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 
-<AnchorPane fx:id="manageTeacherContainer" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="1000.0" prefHeight="720.0" prefWidth="1000.0" style="-fx-background-color: #FFFFFF;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javafx.javafx1.ManageTeacherController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="1000.0" prefHeight="720.0" prefWidth="1000.0" style="-fx-background-color: #FFFFFF;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javafx.javafx1.ManageTeacherController">
    <children>
       <HBox alignment="BOTTOM_LEFT" layoutX="23.0" layoutY="14.0" prefHeight="84.0" prefWidth="954.0">
          <children>
@@ -21,7 +21,7 @@
                   <Font size="42.0" />
                </font>
             </Label>
-            <HBox alignment="CENTER_LEFT" fillHeight="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#onEditTeacherClick" prefHeight="44.0" prefWidth="124.0" style="-fx-background-color: #30475E; -fx-background-radius: 10;">
+            <HBox fx:id="editTeacherBtn" alignment="CENTER_LEFT" fillHeight="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#onEditTeacherClick" prefHeight="44.0" prefWidth="124.0" style="-fx-background-color: #30475E; -fx-background-radius: 10;">
                <HBox.margin>
                   <Insets left="20.0" />
                </HBox.margin>
@@ -44,7 +44,7 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </HBox>
-            <HBox alignment="CENTER_LEFT" fillHeight="false" layoutX="702.0" layoutY="50.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#onDeleteTeacherClick" prefHeight="44.0" prefWidth="124.0" style="-fx-background-color: #F05454; -fx-background-radius: 10;">
+            <HBox fx:id="onDeleteTeacherClick" alignment="CENTER_LEFT" fillHeight="false" layoutX="702.0" layoutY="50.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#onDeleteTeacherClick" prefHeight="44.0" prefWidth="124.0" style="-fx-background-color: #F05454; -fx-background-radius: 10;">
                <children>
                   <Label text="Xóa" textFill="WHITESMOKE">
                      <font>
@@ -86,7 +86,7 @@
       </TableView>
       <StackPane layoutX="840.0" layoutY="530.0" prefHeight="140.0" prefWidth="140.0">
          <children>
-            <Button mnemonicParsing="false" onAction="#onAddTeacherClick" prefHeight="70.0" prefWidth="70.0" style="-fx-background-color: #30475E; -fx-background-radius: 10;" textFill="WHITE">
+            <Button mnemonicParsing="false" onMouseClicked="#onAddTeacherClick" prefHeight="70.0" prefWidth="70.0" style="-fx-background-color: #30475E; -fx-background-radius: 10;" textFill="WHITE">
                <font>
                   <Font size="24.0" />
                </font>

@@ -159,7 +159,7 @@ public class Accounts
     }
 
     // Edit teacher
-    public void editTeacher(String name, int age, String gender, String email, String password, String phone, String address, int status, String certificate, int salary){
+    public void editTeacher(String name, int age, String gender, String email, String password, String phone, String address, int status, String certificate, int salary, int id){
         String sql = "UPDATE accounts " +
                 "SET NAME = ?, age = ?, gender = ?, email = ?, PASSWORD = ?, phone = ?, address = ?, status = ?, certificates = ?, salary = ? WHERE id = ?";
         try {
@@ -174,6 +174,7 @@ public class Accounts
             ps.setInt(8, status);
             ps.setString(9, certificate);
             ps.setInt(10, salary);
+            ps.setInt(11, id);
             ps.execute();
         } catch (Exception e) {
             System.out.println(e);

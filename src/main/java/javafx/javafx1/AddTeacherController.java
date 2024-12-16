@@ -120,7 +120,7 @@ public class AddTeacherController extends App implements Initializable {
                     alert.showAndWait();
                 } else{
                     // chinh sua student
-                    acc.editTeacher(name, Integer.parseInt(age), gender, email, pass, phone, address, status, certificate, salary);
+                    acc.editTeacher(name, Integer.parseInt(age), gender, email, pass, phone, address, status, certificate, salary, teacherId);
                     close(event);
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);
                     alert.setHeaderText(null);
