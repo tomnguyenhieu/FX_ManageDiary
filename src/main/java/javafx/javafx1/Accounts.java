@@ -235,6 +235,16 @@ public class Accounts
         }
     }
 
-
+    public ResultSet getBillInfoByAccountId(int accountId){
+        String sql = "SELECT * FROM bills WHERE account_id = '"+accountId+"'";
+        try {
+            PreparedStatement ps = connect.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            return rs;
+        } catch (Exception e) {
+            System.out.println(e);
+            return null;
+        }
+    }
 
 }

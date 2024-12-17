@@ -117,7 +117,7 @@ public class AddStudentController extends App implements Initializable {
         statusCb.setValue(status);
     }
     public void onConfirmClick(ActionEvent event){
-        if(ageCb.getValue() != null && genderCb.getValue() != null && classCb.getValue() != null){
+        if(ageCb.getValue() != null && genderCb.getValue() != null && classCb.getValue() != null && addressCb.getValue() != null && statusCb.getValue() != null){
             //comboBox khong null
             String name = nameFld.getText();
             String age = ageCb.getValue().toString();
@@ -132,7 +132,7 @@ public class AddStudentController extends App implements Initializable {
             String pEmail = pEmailFld.getText();
             int fee = Integer.parseInt(pFeeFld.getText());
             int status = (statusCb.getValue().toString().equals("Đang hoạt động")) ? 1 : 2;
-            if(name.isEmpty() || gender.isEmpty() || email.isEmpty() || pass.isEmpty() || address.isEmpty() || pName.isEmpty() || pPhone.isEmpty() || pEmail.isEmpty()){
+            if(name.isEmpty() || age.isEmpty() || gender.isEmpty() || email.isEmpty() || pass.isEmpty() || address.isEmpty() || pName.isEmpty() || pPhone.isEmpty() || pEmail.isEmpty()){
                 // Nhap thieu thong tin
                 Alert alert = new Alert(Alert.AlertType.WARNING);
                 alert.setHeaderText(null);

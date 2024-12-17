@@ -1,41 +1,40 @@
 package javafx.javafx1;
 
-import javafx.javafx1.App;
-import javafx.javafx1.Accounts;
-import javafx.javafx1.Student;
+import javafx.animation.ScaleTransition;
+import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.Callback;
+import javafx.util.Duration;
+import org.kordamp.ikonli.javafx.FontIcon;
+import org.kordamp.ikonli.javafx.Icon;
 
 
-import java.io.IOException;
 import java.net.URL;
 import java.sql.ResultSet;
 import java.util.ResourceBundle;
-import java.util.Stack;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class ManageStudentController extends App implements Initializable {
     Person student = null;
     Accounts acc = new Accounts();
+    private static Timeline gameLoop;
     double orgSceneX, orgSceneY, orgTranslateX, orgTranslateY;
     @FXML
     private TableView<Person> studentsTable;
@@ -68,10 +67,82 @@ public class ManageStudentController extends App implements Initializable {
     @FXML
     private TableColumn<Person, String> statusCol;
 
-
-
     @FXML
-    public void refreshTable() {
+    private TableView<Bill> billTable;
+    @FXML
+    private TableColumn<Bill, String> bNameCol;
+    @FXML
+    private TableColumn<Bill, String> bClassCol;
+    @FXML
+    private TableColumn<Bill, String> bDateCol;
+    @FXML
+    private TableColumn<Bill, String> bPriceCol;
+    @FXML
+    private TableColumn<Bill, String> bStatusCol;
+    @FXML
+    private TableColumn<Bill, String> bUpdateCol;
+
+    public void refreshBillTable(){
+        final ObservableList<Bill> BillList = FXCollections.observableArrayList();
+        Accounts acc = new Accounts();
+        ResultSet rs = acc.getBillInfoByAccountId(student.getId());
+        try{
+            while (rs.next()){
+                BillList.add(new Bill(
+                        student.getName(),
+                        student.getClassName(),
+                        rs.getString("time"),
+                        student.getFee(),
+                        rs.getInt("status") == 1 ? "Đã đóng" : "Chưa đóng"
+                ));
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        bNameCol.setCellValueFactory(new PropertyValueFactory<>("bName"));
+        bClassCol.setCellValueFactory(new PropertyValueFactory<>("bClass"));
+        bDateCol.setCellValueFactory(new PropertyValueFactory<>("bDate"));
+        bPriceCol.setCellValueFactory(new PropertyValueFactory<>("bPrice"));
+        bStatusCol.setCellValueFactory(new PropertyValueFactory<>("bStatus"));
+
+        Callback<TableColumn<Bill, String>, TableCell<Bill, String>> cellFoctory = (TableColumn<Bill, String> param) -> {
+            final TableCell<Bill, String> cell = new TableCell<>() {
+                @Override
+                public void updateItem(String item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty) {
+                        setGraphic(null);
+                        setText(null);
+                    } else {
+                        Label lb = new Label("Cập nhật");
+                        lb.setTextFill(Color.WHITE);
+
+                        HBox hbox = new HBox(lb);
+                        hbox.setMaxWidth(100);
+                        hbox.setStyle("-fx-alignment:center; -fx-cursor: hand; -fx-background-color:  #30475E; -fx-background-radius: 8;");
+                        hbox.setOnMouseEntered((MouseEvent event) -> {
+                            HBox myHbox = (HBox) event.getSource();
+                            myHbox.setEffect(new ColorAdjust(0,0,0,-0.2));
+                        });
+                        hbox.setOnMouseExited((MouseEvent event) -> {
+                            HBox myHbox = (HBox) event.getSource();
+                            myHbox.setEffect(new ColorAdjust(0,0,0,0));
+                        });
+
+                        setGraphic(hbox);
+                        setText(null);
+                    }
+                }
+            };
+            return cell;
+        };
+        bUpdateCol.setCellFactory(cellFoctory);
+
+        billTable.setItems(BillList);
+    }
+    @FXML
+    public void refreshStudentTable() {
         final ObservableList<Person> StudentList = FXCollections.observableArrayList();
         Accounts acc = new Accounts();
         ResultSet rs = acc.studentsInfo();
@@ -115,8 +186,8 @@ public class ManageStudentController extends App implements Initializable {
 
         studentsTable.setItems(StudentList);
         System.out.println("refresh!!!!!!!!!");
-        //studentsTable.getColumns().addAll(idCol,nameCol,ageCol,genderCol,emailCol,passCol,phoneCol,addressCol,pNameCol,pPhoneCol,pEmailCol,feeCol,classNameCol);
     }
+
     @FXML
     private void onAddStudentClick(){
         // bat stage form them student
@@ -132,9 +203,10 @@ public class ManageStudentController extends App implements Initializable {
             stage.setScene(scene);
             stage.initStyle(StageStyle.TRANSPARENT);
             stage.initModality(Modality.APPLICATION_MODAL);
+            stage.centerOnScreen();
             stage.show();
             stage.setOnCloseRequest((event) -> {
-                refreshTable();
+                refreshStudentTable();
             });
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -162,8 +234,7 @@ public class ManageStudentController extends App implements Initializable {
                 stage.initModality(Modality.APPLICATION_MODAL);
                 stage.show();
                 stage.setOnCloseRequest((event) -> {
-                    refreshTable();
-//                    studentsTable.setSelectionModel(studentSelection);
+                    refreshStudentTable();
                 });
             } catch (Exception e) {
                 throw new RuntimeException(e);
@@ -183,7 +254,7 @@ public class ManageStudentController extends App implements Initializable {
         if(student != null){
             int studentId = student.getId();
             acc.deleteStudentById(studentId);
-            refreshTable();
+            refreshStudentTable();
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setHeaderText(null);
             alert.setContentText("Xóa sinh viên thành công");
@@ -198,8 +269,17 @@ public class ManageStudentController extends App implements Initializable {
     }
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        refreshTable();
+        refreshStudentTable();
     }
+
+    public void onStudentTableClick(){
+        student = studentsTable.getSelectionModel().getSelectedItem();
+        if(student != null){
+            refreshBillTable();
+        }
+    }
+
+
     public void onMouseEnter(MouseEvent event){
         HBox hbox = (HBox) event.getSource();
         hbox.setEffect(new ColorAdjust(0,0,0,-0.2));
@@ -208,7 +288,6 @@ public class ManageStudentController extends App implements Initializable {
         HBox hbox = (HBox) event.getSource();
         hbox.setEffect(new ColorAdjust(0,0,0,0));
     }
-
     public void onBtnAddPressed(MouseEvent event) {
         orgSceneX = event.getSceneX();
         orgSceneY = event.getSceneY();

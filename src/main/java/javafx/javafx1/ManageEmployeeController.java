@@ -108,6 +108,7 @@ public class ManageEmployeeController extends App implements Initializable {
             stage.setScene(scene);
             stage.initStyle(StageStyle.TRANSPARENT);
             stage.initModality(Modality.APPLICATION_MODAL);
+            stage.centerOnScreen();
             stage.show();
             stage.setOnCloseRequest((event) -> {
                 refreshTableEmployee();
