@@ -76,7 +76,7 @@ public class AddClassController implements Initializable
     public void updateClassOnEdit()
     {
         className = inputClass.getText();
-        teacherName = cbTeachersName.getValue().toString().substring(11);
+        teacherName = cbTeachersName.getValue().toString();
 
         Files file = new Files();
         int teacherId = file.getTeacherId(teacherName);
@@ -88,7 +88,7 @@ public class AddClassController implements Initializable
     public void setUpClassForm(String className, String teacherName)
     {
         inputClass.setText(className);
-        cbTeachersName.setValue(teacherName);
+        cbTeachersName.setValue(teacherName.substring(11));
     }
 
     // Xu ly event
