@@ -231,7 +231,7 @@ public class Files
     }
     public ResultSet getCommentByLessonId(int lessonId)
     {
-        String sql = "SELECT accounts.name, comments.comment "
+        String sql = "SELECT comments.student_id, accounts.name, comments.comment "
                 + "FROM comments JOIN accounts "
                 + "ON comments.student_id = accounts.id "
                 + "WHERE lesson_id = " + lessonId;

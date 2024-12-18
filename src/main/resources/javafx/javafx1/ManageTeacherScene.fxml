@@ -69,22 +69,22 @@
             </HBox>
          </children>
       </HBox>
-      <TableView fx:id="teachersTable" layoutX="25.0" layoutY="107.0" prefHeight="559.0" prefWidth="950.0" style="-fx-background-color: F5F5F5;">
+      <TableView fx:id="teachersTable" layoutX="25.0" layoutY="107.0" onMouseClicked="#onTeacherSelected" prefHeight="371.0" prefWidth="950.0" style="-fx-background-color: F5F5F5;">
          <columns>
             <TableColumn fx:id="idCol" prefWidth="30.333332061767578" text="Id" />
-            <TableColumn fx:id="nameCol" prefWidth="171.0" text="Ho va ten" />
-            <TableColumn fx:id="ageCol" prefWidth="49.0" text="Tuoi" />
-            <TableColumn fx:id="genderCol" prefWidth="64.33334350585938" text="Gioi tinh" />
+            <TableColumn fx:id="nameCol" prefWidth="171.0" text="Họ và tên" />
+            <TableColumn fx:id="ageCol" prefWidth="49.0" text="Tuổi" />
+            <TableColumn fx:id="genderCol" prefWidth="64.33334350585938" text="Giới tính" />
             <TableColumn fx:id="emailCol" prefWidth="110.33334350585938" text="Email" />
-            <TableColumn fx:id="passCol" prefWidth="69.33334350585938" text="Mat khau" />
-            <TableColumn fx:id="phoneCol" prefWidth="114.66665649414062" text="So dien thoai" />
-            <TableColumn fx:id="addressCol" prefWidth="111.33331298828125" text="Dia chi" />
-            <TableColumn fx:id="certificateCol" prefWidth="89.0" text="Bang cap" />
-            <TableColumn fx:id="salaryCol" minWidth="0.0" prefWidth="64.0" text="Luong" />
-            <TableColumn fx:id="statusCol" minWidth="0.0" prefWidth="80.33331298828125" text="Trang thai" />
+            <TableColumn fx:id="passCol" prefWidth="69.33334350585938" text="Mật khẩu" />
+            <TableColumn fx:id="phoneCol" prefWidth="103.0" text="Số điện thoại" />
+            <TableColumn fx:id="addressCol" prefWidth="110.66668701171875" text="Địa chỉ" />
+            <TableColumn fx:id="certificateCol" prefWidth="87.0" text="Bằng cấp" />
+            <TableColumn fx:id="salaryCol" minWidth="0.0" text="Mức lương" />
+            <TableColumn fx:id="statusCol" minWidth="0.0" prefWidth="80.33331298828125" text="Trạng thái" />
          </columns>
       </TableView>
-      <StackPane layoutX="840.0" layoutY="530.0" prefHeight="140.0" prefWidth="140.0">
+      <StackPane alignment="BOTTOM_RIGHT" layoutX="870.0" layoutY="375.0" onMouseDragged="#onBtnAddDragged" onMousePressed="#onBtnAddPressed" onMouseReleased="#onBtnExit" prefHeight="84.0" prefWidth="86.0">
          <children>
             <Button mnemonicParsing="false" onMouseClicked="#onAddTeacherClick" prefHeight="70.0" prefWidth="70.0" style="-fx-background-color: #30475E; -fx-background-radius: 10;" textFill="WHITE">
                <font>
@@ -97,7 +97,23 @@
                   <FontIcon iconColor="WHITE" iconLiteral="fas-user-plus" iconSize="28" tabSize="20" />
                </graphic>
             </Button>
+            <FontIcon iconLiteral="fas-arrows-alt" iconSize="20">
+               <StackPane.margin>
+                  <Insets bottom="65.0" right="65.0" />
+               </StackPane.margin>
+            </FontIcon>
          </children>
       </StackPane>
+      <TableView fx:id="teacherDetailTable" layoutX="24.0" layoutY="503.0" prefHeight="200.0" prefWidth="952.0" style="-fx-background-color: F5F5F5;">
+         <columns>
+            <TableColumn fx:id="detailIdCol" prefWidth="114.33332824707031" text="Id giáo viên" />
+            <TableColumn fx:id="detailNameCol" prefWidth="190.6666717529297" text="Họ và tên" />
+            <TableColumn fx:id="monthCol" prefWidth="161.6666717529297" text="Tháng" />
+            <TableColumn fx:id="lessonQtyCol" prefWidth="106.33334350585938" text="Số buổi" />
+            <TableColumn fx:id="monthSalaryCol" minWidth="0.0" prefWidth="141.0" text="Lương tháng" />
+            <TableColumn fx:id="detailStatusCol" minWidth="0.0" prefWidth="113.66668701171875" text="Trạng thái" />
+            <TableColumn fx:id="updateSalarySttCol" minWidth="0.0" prefWidth="122.33331298828125" />
+         </columns>
+      </TableView>
    </children>
 </AnchorPane>

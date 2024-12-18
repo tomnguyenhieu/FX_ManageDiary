@@ -444,9 +444,12 @@ public class ManageDiaryController extends App
             while (rs.next())
             {
                 List<String> tmpList = new ArrayList<>();
+                Integer studentId = rs.getInt("student_id");
+                String _studentId = studentId.toString();
                 String studentName = rs.getString("name");
                 String studentComment = rs.getString("comment");
 
+                tmpList.add(_studentId);
                 tmpList.add(studentName);
                 tmpList.add(studentComment);
 
@@ -506,8 +509,8 @@ public class ManageDiaryController extends App
                 classCellValue.setCellValue(commentInfo.getFirst());
 
                 XSSFRow labelRow = sheet.createRow(3);
-                XSSFCell labelSTT = labelRow.createCell(0);
-                labelSTT.setCellValue("STT");
+                XSSFCell labelID = labelRow.createCell(0);
+                labelID.setCellValue("ID");
                 XSSFCell labelName = labelRow.createCell(1);
                 labelName.setCellValue("Tên");
                 XSSFCell labelComment = labelRow.createCell(2);
@@ -517,13 +520,10 @@ public class ManageDiaryController extends App
                 {
                     XSSFRow row = sheet.createRow(i + 4);
 
-                    XSSFCell idCell = row.createCell(0);
-                    idCell.setCellValue(i + 1);
-
                     List<String> rowData = classComments.get(i);
                     for (int j = 0; j < rowData.size(); j++)
                     {
-                        XSSFCell cell = row.createCell(j + 1);
+                        XSSFCell cell = row.createCell(j);
                         cell.setCellValue(rowData.get(j));
                     }
                 }

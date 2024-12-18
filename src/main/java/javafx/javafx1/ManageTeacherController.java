@@ -14,14 +14,17 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.effect.ColorAdjust;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.Callback;
 
 /**
  *
@@ -30,8 +33,11 @@ import javafx.stage.StageStyle;
 public class ManageTeacherController extends App implements Initializable {
     Teacher teacher = null;
     Accounts acc = new Accounts();
+    double orgSceneX, orgSceneY, orgTranslateX, orgTranslateY;
     @FXML
     private TableView<Teacher> teachersTable;
+    @FXML
+    private TableView<Bill> teacherDetailTable;
     @FXML
     private TableColumn<Teacher, String> idCol;
     @FXML
@@ -54,6 +60,21 @@ public class ManageTeacherController extends App implements Initializable {
     private TableColumn<Teacher, String> salaryCol;
     @FXML
     private TableColumn<Teacher, String> statusCol;
+    @FXML
+    private TableColumn<Bill, String> detailIdCol;
+    @FXML
+    private TableColumn<Bill, String> detailNameCol;
+    @FXML
+    private TableColumn<Bill, String> monthCol;
+    @FXML
+    private TableColumn<Bill, String> lessonQtyCol;
+    @FXML
+    private TableColumn<Bill, String> monthSalaryCol;
+    @FXML
+    private TableColumn<Bill, String> detailStatusCol;
+    @FXML
+    private TableColumn<Bill, String> updateSalarySttCol;
+    
 
     // Load table Teachers
     @FXML
@@ -119,7 +140,7 @@ public class ManageTeacherController extends App implements Initializable {
     }
 
     public void onEditTeacherClick() {
-        // Lay thong tin student de hien len form
+        // Lay thong tin teacher de hien len form
         teacher = teachersTable.getSelectionModel().getSelectedItem();
         if(teacher != null) {
             System.out.println(teacher.getName());
@@ -153,7 +174,7 @@ public class ManageTeacherController extends App implements Initializable {
     }
     
     public void onDeleteTeacherClick(MouseEvent event){
-        // Lay id student va bo vao ham xoa
+        // Lay id teacher va bo vao ham xoa
         teacher = teachersTable.getSelectionModel().getSelectedItem();
         if(teacher != null){
             int teacherId = teacher.getId();
@@ -170,9 +191,136 @@ public class ManageTeacherController extends App implements Initializable {
             alert.showAndWait();
         }
     }
+
+    private void refreshTeacherDetails() {
+        if (teacher != null) {
+            ObservableList<Bill> billList = FXCollections.observableArrayList();
+            ResultSet rs = acc.getTeacherInfoByAccountId(teacher.getId());
+            try {
+                while (rs.next()) {
+                    billList.add(new Bill(
+                            teacher.getId(),
+                            teacher.getName(),
+                            rs.getString("month_taught"),
+                            rs.getInt("lessons_count"),
+                            rs.getInt("monthly_salary"),
+                            rs.getInt("salary_status") == 1 ? "Đã trả" : "Chưa trả"
+                    ));
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            teacherDetailTable.setItems(billList);
+        }
+    }
+
+    public void onTeacherSelected () {
+        teacher = teachersTable.getSelectionModel().getSelectedItem();
+        // Lấy giáo viên được chọn từ bảng teachersTable
+        final ObservableList<Bill> BillList = FXCollections.observableArrayList();
+        Accounts acc = new Accounts();
+        ResultSet rs = acc.getTeacherInfoByAccountId(teacher.getId());
+
+        System.out.println(teacher.getId());
+        try{
+            while (rs.next()){
+                BillList.add(new Bill(
+                        teacher.getId(),
+                        teacher.getName(),
+                        rs.getString("month_taught"),
+                        rs.getInt("lessons_count"),
+                        rs.getInt("monthly_salary"),
+                        rs.getInt("salary_status") == 1 ? "Đã trả" : "Chưa trả"
+                ));
+
+                System.out.println(rs.getString("month_taught"));
+                System.out.println(rs.getInt("salary_status"));
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        detailIdCol.setCellValueFactory(new PropertyValueFactory<>("id"));
+        detailNameCol.setCellValueFactory(new PropertyValueFactory<>("bName"));
+        monthCol.setCellValueFactory(new PropertyValueFactory<>("month"));
+        lessonQtyCol.setCellValueFactory(new PropertyValueFactory<>("lessonQty"));
+        monthSalaryCol.setCellValueFactory(new PropertyValueFactory<>("monthlySalary"));
+        detailStatusCol.setCellValueFactory(new PropertyValueFactory<>("bStatus"));
+
+        Callback<TableColumn<Bill, String>, TableCell<Bill, String>> cellFactory = (TableColumn<Bill, String> param) -> {
+            final TableCell<Bill, String> cell = new TableCell<>() {
+                @Override
+                public void updateItem(String item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty) {
+                        setGraphic(null);
+                        setText(null);
+                    } else {
+                        Bill bill = getTableView().getItems().get(getIndex());
+                        if ("Đã trả".equals(bill.getBStatus())) {
+                            setGraphic(null); // Ẩn nút nếu trạng thái là "Đã trả"
+                            setText(null);
+                        } else {
+                            Label lb = new Label("Cập nhật");
+                            lb.setTextFill(Color.WHITE);
+
+                            HBox hbox = new HBox(lb);
+                            hbox.setMaxWidth(100);
+                            hbox.setStyle("-fx-alignment:center; -fx-cursor: hand; -fx-background-color:  #30475E; -fx-background-radius: 8;");
+                            hbox.setOnMouseClicked(event -> {
+                                // Cập nhật trạng thái trong database
+                                acc.updateSalaryStatus(bill.getId());
+                                // Làm mới bảng teacherDetailTable
+                                refreshTeacherDetails();
+                            });
+
+                            setGraphic(hbox);
+                            setText(null);
+                        }
+                    }
+                }
+            };
+            return cell;
+        };
+        updateSalarySttCol.setCellFactory(cellFactory);
+        teacherDetailTable.setItems(BillList);
+    }
     
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         refreshTableTeachers();
+    }
+    
+    public void onMouseEnter(MouseEvent event){
+        HBox hbox = (HBox) event.getSource();
+        hbox.setEffect(new ColorAdjust(0,0,0,-0.2));
+    }
+    public void onMouseExit(MouseEvent event){
+        HBox hbox = (HBox) event.getSource();
+        hbox.setEffect(new ColorAdjust(0,0,0,0));
+    }
+
+    public void onBtnAddPressed(MouseEvent event) {
+        orgSceneX = event.getSceneX();
+        orgSceneY = event.getSceneY();
+        StackPane stkPane = (StackPane)(event.getSource());
+        stkPane.setScaleY(1.1);
+        stkPane.setScaleX(1.1);
+        orgTranslateX = ((StackPane)(event.getSource())).getTranslateX();
+        orgTranslateY = ((StackPane)(event.getSource())).getTranslateY();
+    }
+    public void onBtnAddDragged(MouseEvent event) {
+        double offsetX = event.getSceneX() - orgSceneX;
+        double offsetY = event.getSceneY() - orgSceneY;
+        double newTranslateX = orgTranslateX + offsetX;
+        double newTranslateY = orgTranslateY + offsetY;
+        ((StackPane)(event.getSource())).setTranslateX(newTranslateX);
+        ((StackPane)(event.getSource())).setTranslateY(newTranslateY);
+    }
+    public void onBtnExit(MouseEvent event){
+        StackPane stkPane = (StackPane)(event.getSource());
+        stkPane.setScaleY(1);
+        stkPane.setScaleX(1);
     }
 }

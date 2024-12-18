@@ -220,6 +220,7 @@ public class ManageClassController extends App
             Parent root = loader.load();
 
             AddClassController addClassController = loader.getController();
+
             addClassController.setUpClassForm(classLabel.getText(), teacherLabel.getText());
             addClassController.setEdit(true);
             addClassController.setClassIdGlobal(files.getClassId(classLabel.getText()));

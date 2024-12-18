@@ -19,9 +19,8 @@ public class Accounts
             PreparedStatement ps = connect.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
             return rs;
-        } catch (Exception e) {
-            System.out.println(e);
-            return null;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -31,9 +30,8 @@ public class Accounts
             PreparedStatement ps = connect.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
             return rs;
-        } catch (Exception e) {
-            System.out.println(e);
-            return null;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
     public int getClassId(String className)
@@ -59,9 +57,8 @@ public class Accounts
             PreparedStatement ps = connect.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
             return rs;
-        } catch (Exception e) {
-            System.out.println(e);
-            return null;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
     public void deleteStudentById(int studentId){
@@ -69,8 +66,8 @@ public class Accounts
         try {
             PreparedStatement ps = connect.prepareStatement(sql);
             ps.execute();
-        } catch (Exception e) {
-            System.out.println(e);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
     public void addStudent(String name, int age, String gender, String email, String pass, String phone, String address, String pName, String pPhone, String pEmail, int fee, String className, int status){
@@ -94,7 +91,7 @@ public class Accounts
             ps.setInt(14, status);
             ps.execute();
         } catch (Exception e) {
-            System.out.println(e);
+            throw new RuntimeException(e);
         }
     }
     public void editStudent(String name, int age, String gender, String email, String pass, String phone, String address, String pName, String pPhone, String pEmail, int fee, String className, int status, int id){
@@ -118,7 +115,7 @@ public class Accounts
             ps.setInt(14, id);
             ps.execute();
         } catch (Exception e) {
-            System.out.println(e);
+            throw new RuntimeException(e);
         }
     }
 
@@ -129,9 +126,8 @@ public class Accounts
             PreparedStatement ps = connect.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
             return rs;
-        } catch (Exception e) {
-            System.out.println(e);
-            return null;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -154,7 +150,7 @@ public class Accounts
             ps.setInt(11, salary);
             ps.execute();
         } catch (Exception e) {
-            System.out.println(e);
+            throw new RuntimeException(e);
         }
     }
 
@@ -177,7 +173,7 @@ public class Accounts
             ps.setInt(11, id);
             ps.execute();
         } catch (Exception e) {
-            System.out.println(e);
+            throw new RuntimeException(e);
         }
     }
 
@@ -186,8 +182,8 @@ public class Accounts
         try {
             PreparedStatement ps = connect.prepareStatement(sql);
             ps.execute();
-        } catch (Exception e) {
-            System.out.println(e);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -209,7 +205,7 @@ public class Accounts
             ps.setInt(11, salary);
             ps.execute();
         } catch (Exception e) {
-            System.out.println(e);
+            throw new RuntimeException(e);
         }
     }
 
@@ -231,7 +227,7 @@ public class Accounts
             ps.setInt(11, id);
             ps.execute();
         } catch (Exception e) {
-            System.out.println(e);
+            throw new RuntimeException(e);
         }
     }
 
@@ -241,9 +237,8 @@ public class Accounts
             PreparedStatement ps = connect.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
             return rs;
-        } catch (Exception e) {
-            System.out.println(e);
-            return null;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -252,8 +247,38 @@ public class Accounts
         try {
             PreparedStatement ps = connect.prepareStatement(sql);
             ps.execute();
-        } catch (Exception e) {
-            System.out.println(e);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public ResultSet getTeacherInfoByAccountId(int accountId){
+        String sql = "SELECT a.id AS teacher_id, a.name AS teacher_name, "
+                + "a.salary, CAST(DATE_FORMAT(STR_TO_DATE(l.title, '%d/%m/%Y'), '%m/%Y') "
+                + "AS CHAR) AS month_taught, COUNT(l.id) AS lessons_count, "
+                + "COUNT(l.id) * a.salary AS monthly_salary, b.status AS salary_status "
+                + "FROM accounts a JOIN classes c ON a.id = c.teacher_id "
+                + "JOIN lessons l ON c.id = l.class_id LEFT JOIN bills b "
+                + "ON a.id = b.account_id WHERE a.role = 2 "
+                + "AND a.id = " +accountId+ " GROUP BY a.id, a.name, a.salary, month_taught, b.status "
+                + "ORDER BY a.id, month_taught;";
+        try {
+            PreparedStatement ps = connect.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            return rs;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void updateSalaryStatus(int billId) {
+        String sql = "UPDATE bills SET status = 1 WHERE id = " + billId;
+        try {
+            PreparedStatement ps = connect.prepareStatement(sql);
+            ps.setInt(1, billId);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 }
