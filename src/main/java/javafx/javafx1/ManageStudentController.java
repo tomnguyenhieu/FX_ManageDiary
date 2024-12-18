@@ -1,6 +1,5 @@
 package javafx.javafx1;
 
-import javafx.animation.ScaleTransition;
 import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -20,16 +19,12 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Callback;
-import javafx.util.Duration;
 import org.kordamp.ikonli.javafx.FontIcon;
-import org.kordamp.ikonli.javafx.Icon;
 
 
 import java.net.URL;
 import java.sql.ResultSet;
 import java.util.ResourceBundle;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class ManageStudentController extends App implements Initializable {
     Person student = null;
@@ -81,6 +76,8 @@ public class ManageStudentController extends App implements Initializable {
     private TableColumn<Bill, String> bStatusCol;
     @FXML
     private TableColumn<Bill, String> bUpdateCol;
+    @FXML
+    private StackPane billStkPane;
 
     public void refreshBillTable(){
         final ObservableList<Bill> BillList = FXCollections.observableArrayList();
@@ -89,6 +86,7 @@ public class ManageStudentController extends App implements Initializable {
         try{
             while (rs.next()){
                 BillList.add(new Bill(
+                        rs.getInt("id"),
                         student.getName(),
                         student.getClassName(),
                         rs.getString("time"),
@@ -105,6 +103,7 @@ public class ManageStudentController extends App implements Initializable {
         bDateCol.setCellValueFactory(new PropertyValueFactory<>("bDate"));
         bPriceCol.setCellValueFactory(new PropertyValueFactory<>("bPrice"));
         bStatusCol.setCellValueFactory(new PropertyValueFactory<>("bStatus"));
+        billTable.setItems(BillList);
 
         Callback<TableColumn<Bill, String>, TableCell<Bill, String>> cellFoctory = (TableColumn<Bill, String> param) -> {
             final TableCell<Bill, String> cell = new TableCell<>() {
@@ -115,23 +114,42 @@ public class ManageStudentController extends App implements Initializable {
                         setGraphic(null);
                         setText(null);
                     } else {
-                        Label lb = new Label("Cập nhật");
-                        lb.setTextFill(Color.WHITE);
+                        Bill bill = getTableView().getItems().get(getIndex());
+                        if (!bill.getBStatus().equals("Đã đóng")){
+                            Label lb = new Label("Cập nhật");
+                            lb.setTextFill(Color.WHITE);
 
-                        HBox hbox = new HBox(lb);
-                        hbox.setMaxWidth(100);
-                        hbox.setStyle("-fx-alignment:center; -fx-cursor: hand; -fx-background-color:  #30475E; -fx-background-radius: 8;");
-                        hbox.setOnMouseEntered((MouseEvent event) -> {
-                            HBox myHbox = (HBox) event.getSource();
-                            myHbox.setEffect(new ColorAdjust(0,0,0,-0.2));
-                        });
-                        hbox.setOnMouseExited((MouseEvent event) -> {
-                            HBox myHbox = (HBox) event.getSource();
-                            myHbox.setEffect(new ColorAdjust(0,0,0,0));
-                        });
+                            HBox hbox = new HBox(lb);
+                            hbox.setMaxWidth(100);
+                            hbox.setStyle("-fx-alignment:center; -fx-cursor: hand; -fx-background-color:  #30475E; -fx-background-radius: 8;");
 
-                        setGraphic(hbox);
-                        setText(null);
+                            hbox.setOnMouseClicked((MouseEvent event) -> {
+                                acc.updateBillStatus(billTable.getSelectionModel().getSelectedItem().getBId());
+                                System.out.println(billTable.getSelectionModel().getSelectedItem().getBId());
+                                refreshBillTable();
+                            });
+                            hbox.setOnMouseEntered((MouseEvent event) -> {
+                                HBox myHbox = (HBox) event.getSource();
+                                myHbox.setEffect(new ColorAdjust(0,0,0,-0.2));
+                            });
+                            hbox.setOnMouseExited((MouseEvent event) -> {
+                                HBox myHbox = (HBox) event.getSource();
+                                myHbox.setEffect(new ColorAdjust(0,0,0,0));
+                            });
+
+                            setGraphic(hbox);
+                            setText(null);
+                        } else{
+                            FontIcon font = new FontIcon("fas-check-circle");
+                            font.setIconSize(12);
+                            HBox hb = new HBox(font);
+                            hb.setMaxWidth(100);
+                            hb.setStyle("-fx-alignment:center;-fx-background-color:  #FFFFFF;");
+                            setGraphic(hb);
+                            setText(null);
+                        }
+
+
                     }
                 }
             };
@@ -139,7 +157,6 @@ public class ManageStudentController extends App implements Initializable {
         };
         bUpdateCol.setCellFactory(cellFoctory);
 
-        billTable.setItems(BillList);
     }
     @FXML
     public void refreshStudentTable() {
@@ -189,7 +206,7 @@ public class ManageStudentController extends App implements Initializable {
     }
 
     @FXML
-    private void onAddStudentClick(){
+    private void onAddStudentClick(MouseEvent event){
         // bat stage form them student
         System.out.println("Add!!");
         try {
@@ -205,7 +222,7 @@ public class ManageStudentController extends App implements Initializable {
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.centerOnScreen();
             stage.show();
-            stage.setOnCloseRequest((event) -> {
+            stage.setOnCloseRequest((event1) -> {
                 refreshStudentTable();
             });
         } catch (Exception e) {
@@ -214,6 +231,7 @@ public class ManageStudentController extends App implements Initializable {
     }
     @FXML
     public void onEditStudentClick() {
+        billStkPane.setVisible(false);
         // Lay thong tin student de hien len form
         student = studentsTable.getSelectionModel().getSelectedItem();
 //        TableView.TableViewSelectionModel<Student> studentSelection = studentsTable.getSelectionModel();
@@ -248,7 +266,7 @@ public class ManageStudentController extends App implements Initializable {
         }
     }
     @FXML
-    public void onDeleteStudentClick(MouseEvent event){
+    public void onDeleteStudentClick(){
         // Lay id student va bo vao ham xoa
         student = studentsTable.getSelectionModel().getSelectedItem();
         if(student != null){
@@ -271,10 +289,31 @@ public class ManageStudentController extends App implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         refreshStudentTable();
     }
-
-    public void onStudentTableClick(){
+    boolean firstClick = true;
+    public void onStudentTableClick(MouseEvent event){
         student = studentsTable.getSelectionModel().getSelectedItem();
         if(student != null){
+            billStkPane.setVisible(firstClick);
+            double posX = event.getX();
+            double posY = event.getY();
+
+            if(posX + 23 < 1080 - 526 && posY + 107 < 594-120){
+                billStkPane.setLayoutX(posX + 30);
+                billStkPane.setLayoutY(posY + 120);
+            } else if (posX + 23 >= 1080 - 526){
+                if(posY + 107 >= 594 -100){
+                    billStkPane.setLayoutX(1080-526);
+                    billStkPane.setLayoutY(594-100);
+                } else {
+                    billStkPane.setLayoutX(1080-526);
+                    billStkPane.setLayoutY(posY + 120);
+                }
+            } else{
+                billStkPane.setLayoutX(posX + 40);
+                billStkPane.setLayoutY(594 - 100);
+            }
+//            System.out.println(posX + " " + posY);
+            firstClick = !firstClick;
             refreshBillTable();
         }
     }

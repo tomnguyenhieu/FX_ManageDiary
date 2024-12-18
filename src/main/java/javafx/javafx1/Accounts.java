@@ -247,4 +247,13 @@ public class Accounts
         }
     }
 
+    public void updateBillStatus(int id){
+        String sql = "UPDATE bills SET status = 1 WHERE id = '"+id+"'";
+        try {
+            PreparedStatement ps = connect.prepareStatement(sql);
+            ps.execute();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
 }

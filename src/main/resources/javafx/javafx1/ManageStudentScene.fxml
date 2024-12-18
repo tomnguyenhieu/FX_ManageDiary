@@ -7,6 +7,7 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.effect.ColorAdjust?>
+<?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
@@ -15,7 +16,7 @@
 
 <AnchorPane maxHeight="720.0" maxWidth="1000.0" minHeight="720.0" minWidth="1000.0" prefHeight="720.0" prefWidth="1000.0" style="-fx-background-color: #FFFFFF;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javafx.javafx1.ManageStudentController">
    <children>
-      <TableView fx:id="studentsTable" fixedCellSize="35.0" layoutX="23.0" layoutY="107.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#onStudentTableClick" prefHeight="352.0" prefWidth="954.0" style="-fx-background-color: F5F5F5;">
+      <TableView fx:id="studentsTable" fixedCellSize="35.0" layoutX="23.0" layoutY="107.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#onStudentTableClick" prefHeight="594.0" prefWidth="954.0" style="-fx-background-color: F5F5F5;">
          <columns>
             <TableColumn fx:id="idCol" prefWidth="20.799958050251007" text="Id" />
             <TableColumn fx:id="nameCol" prefWidth="98.93340682983398" text="Ho va ten" />
@@ -91,7 +92,7 @@
             </HBox>
          </children>
       </HBox>
-      <StackPane alignment="BOTTOM_RIGHT" layoutX="860.0" layoutY="300.0" onMouseDragged="#onBtnAddDragged" onMousePressed="#onBtnAddPressed" onMouseReleased="#onBtnExit" prefHeight="84.0" prefWidth="86.0">
+      <StackPane alignment="BOTTOM_RIGHT" layoutX="860.0" layoutY="600.0" onMouseDragged="#onBtnAddDragged" onMousePressed="#onBtnAddPressed" onMouseReleased="#onBtnExit" prefHeight="84.0" prefWidth="86.0">
          <children>
             <Button mnemonicParsing="false" onMouseClicked="#onAddStudentClick" prefHeight="70.0" prefWidth="70.0" style="-fx-background-color: #30475E; -fx-background-radius: 10;" textFill="WHITE">
                <font>
@@ -111,15 +112,22 @@
             </FontIcon>
          </children>
       </StackPane>
-      <TableView fx:id="billTable" fixedCellSize="35.0" layoutX="23.0" layoutY="470.0" prefHeight="234.0" prefWidth="954.0">
-        <columns>
-          <TableColumn fx:id="bNameCol" prefWidth="246.66667366027832" text="Tên" />
-          <TableColumn fx:id="bClassCol" prefWidth="129.066650390625" text="Lớp" />
-            <TableColumn fx:id="bDateCol" prefWidth="154.13339233398438" text="Tháng" />
-            <TableColumn fx:id="bPriceCol" prefWidth="162.66665649414062" text="Học phí" />
-            <TableColumn fx:id="bStatusCol" prefWidth="106.93341064453125" text="Trạng thái" />
-            <TableColumn fx:id="bUpdateCol" prefWidth="143.2000732421875" />
-        </columns>
-      </TableView>
+      <StackPane fx:id="billStkPane" layoutX="483.0" layoutY="300.0" prefHeight="198.0" prefWidth="439.0" visible="false">
+         <children>
+            <TableView fx:id="billTable" fixedCellSize="35.0" prefHeight="150.0" prefWidth="526.0">
+              <columns>
+                <TableColumn fx:id="bNameCol" minWidth="0.0" prefWidth="0.0" text="Tên" />
+                <TableColumn fx:id="bClassCol" prefWidth="80.2666951417923" text="Lớp" />
+                  <TableColumn fx:id="bDateCol" prefWidth="89.066650390625" text="Tháng" />
+                  <TableColumn fx:id="bPriceCol" prefWidth="81.86669921875" text="Học phí" />
+                  <TableColumn fx:id="bStatusCol" prefWidth="111.20013427734375" text="Trạng thái" />
+                  <TableColumn fx:id="bUpdateCol" prefWidth="68.800048828125" />
+              </columns>
+            </TableView>
+         </children>
+         <effect>
+            <DropShadow height="18.0" radius="8.5" width="18.0" />
+         </effect>
+      </StackPane>
    </children>
 </AnchorPane>
