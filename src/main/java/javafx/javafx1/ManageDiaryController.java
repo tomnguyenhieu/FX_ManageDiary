@@ -336,7 +336,6 @@ public class ManageDiaryController extends App
             stage.show();
             stage.setOnCloseRequest((event) -> {
                 isConfirm = confirmUploadController.getConfirm();
-                System.out.println(isConfirm);
                 if (isConfirm)
                 {
                     uploadFile.storeExcelInfo(classId, titleValue, contentValue);
@@ -354,6 +353,38 @@ public class ManageDiaryController extends App
                     displayLessons(classIdGlobal);
                     loadTable1Comment(uploadFile.findLessonByTitle(titleValue));
                     loadTable2Comment(uploadFile.findLessonByTitle(titleValue));
+
+                    Files files = new Files();
+                    boolean isExistedBill = false;
+                    String time = titleValue.substring(3);
+                    System.out.println(time);
+
+                    ResultSet rs1 = files.getTeacherIdByClassName(classValue);
+                    int teacherId = 0;
+                    try {
+                        while (rs1.next())
+                        {
+                            teacherId = rs1.getInt("teacher_id");
+                        }
+                    } catch (SQLException e) {
+                        throw new RuntimeException(e);
+                    }
+                    System.out.println(teacherId);
+
+                    ResultSet rs = files.checkExistedBill(teacherId, time);
+                    try {
+                        while (rs.next())
+                        {
+                            isExistedBill = true;
+                        }
+                    } catch (SQLException e) {
+                        throw new RuntimeException(e);
+                    }
+
+                    if (!isExistedBill)
+                    {
+                        files.addTeacherBill(teacherId, time);
+                    }
                 }
             });
         } else {

@@ -275,4 +275,46 @@ public class Files
 
         return className;
     }
+    public ResultSet getTeacherIdByClassName(String className)
+    {
+        String sql = "SELECT * FROM classes WHERE NAME = '" +className+ "' AND deleted = 1";
+        PreparedStatement ps;
+        try {
+            ps = connect.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            return rs;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public ResultSet checkExistedBill(int teacherId, String time)
+    {
+        String sql = "SELECT * FROM bills WHERE account_id = " +teacherId+ " AND TIME = '" +time+ "'";
+        PreparedStatement ps;
+        try {
+            ps = connect.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            return rs;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public boolean addTeacherBill(int teacherId, String time)
+    {
+        String sql = "INSERT INTO bills("
+                + "account_id, time, status, type)"
+                + " VALUES(?,?,?, ?)";
+        PreparedStatement ps;
+        try {
+            ps = connect.prepareStatement(sql);
+            ps.setInt(1, teacherId);
+            ps.setString(2, time);
+            ps.setInt(3, 1);
+            ps.setInt(4, 1);
+            ps.executeUpdate();
+            return true;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

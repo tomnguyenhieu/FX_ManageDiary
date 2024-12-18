@@ -261,7 +261,7 @@ public class Accounts
                 + "JOIN lessons l ON c.id = l.class_id LEFT JOIN bills b "
                 + "ON a.id = b.account_id WHERE a.role = 2 "
                 + "AND a.id = " +accountId+ " GROUP BY a.id, a.name, a.salary, month_taught, b.status "
-                + "ORDER BY a.id, month_taught;";
+                + "ORDER BY a.id, month_taught";
         try {
             PreparedStatement ps = connect.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
