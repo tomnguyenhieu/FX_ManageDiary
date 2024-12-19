@@ -124,9 +124,10 @@ public class ManageStudentController extends App implements Initializable {
                             hbox.setStyle("-fx-alignment:center; -fx-cursor: hand; -fx-background-color:  #30475E; -fx-background-radius: 8;");
 
                             hbox.setOnMouseClicked((MouseEvent event) -> {
-                                acc.updateBillStatus(billTable.getSelectionModel().getSelectedItem().getBId());
-                                System.out.println(billTable.getSelectionModel().getSelectedItem().getBId());
-                                refreshBillTable();
+//                                acc.updateBillStatus(billTable.getSelectionModel().getSelectedItem().getBId());
+//                                refreshBillTable();
+
+                                System.out.println(bill.getBId());
                             });
                             hbox.setOnMouseEntered((MouseEvent event) -> {
                                 HBox myHbox = (HBox) event.getSource();

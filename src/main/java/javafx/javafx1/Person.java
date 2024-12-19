@@ -21,6 +21,11 @@ public class Person {
     private SimpleStringProperty certificates;
     private int salary;
 
+    public Person(int id, String name)
+    {
+        this.id = id;
+        this.name = new SimpleStringProperty(name);
+    }
 
     public Person(int id, String name, int age, String gender, String email, String password, String phone, String address, String pName, String pPhone, String pEmail, int fee, String className, String status) {
         this.id = id;

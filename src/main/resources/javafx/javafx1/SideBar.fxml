@@ -36,7 +36,7 @@
                         <Insets left="16.0" top="16.0" />
                      </padding>
                   </HBox>
-                  <ScrollPane hbarPolicy="NEVER" prefHeight="521.0" prefWidth="280.0" style="-fx-background: #30475E; -fx-background-color: transparent;" vbarPolicy="NEVER">
+                  <ScrollPane hbarPolicy="NEVER" prefHeight="521.0" prefWidth="280.0" style="-fx-background: #30475E; -fx-background-color: transparent;">
                      <content>
                         <VBox fx:id="sbContainer" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="269.0" spacing="20.0">
                            <children>
@@ -44,7 +44,37 @@
                                  <content>
                                     <VBox fx:id="tiledPaneContainer" prefWidth="100.0" spacing="12.0" style="-fx-background-color: #30475E;">
                                        <children>
-                                          <HBox fx:id="titledPaneChild1" maxHeight="55.0" minHeight="55.0" onMouseClicked="#onMouseClickGetTitledPaneChildren" prefHeight="55.0" prefWidth="180.0" style="-fx-background-radius: 5;">
+                                          <HBox fx:id="dbTeachersStaffsBtn" maxHeight="55.0" minHeight="55.0" onMouseClicked="#onMouseClickGetTitledPaneChildren" prefHeight="55.0" prefWidth="180.0" style="-fx-background-radius: 5;">
+                                             <cursor>
+                                                <Cursor fx:constant="HAND" />
+                                             </cursor>
+                                             <children>
+                                                <Label prefHeight="73.0" prefWidth="280.0" text="Giáo viên &amp; Nhân viên" textFill="WHITE" wrapText="true">
+                                                   <font>
+                                                      <Font size="22.0" />
+                                                   </font>
+                                                   <HBox.margin>
+                                                      <Insets left="12.0" />
+                                                   </HBox.margin>
+                                                </Label>
+                                             </children>
+                                          </HBox>
+                                          <HBox fx:id="dbStudentsBtn" layoutX="29.0" layoutY="29.0" maxHeight="55.0" minHeight="55.0" onMouseClicked="#onMouseClickGetTitledPaneChildren" prefHeight="55.0" prefWidth="180.0" style="-fx-background-radius: 5;">
+                                             <cursor>
+                                                <Cursor fx:constant="HAND" />
+                                             </cursor>
+                                             <children>
+                                                <Label prefHeight="73.0" prefWidth="280.0" text="Học viên" textFill="WHITE">
+                                                   <font>
+                                                      <Font size="22.0" />
+                                                   </font>
+                                                   <HBox.margin>
+                                                      <Insets left="12.0" />
+                                                   </HBox.margin>
+                                                </Label>
+                                             </children>
+                                          </HBox>
+                                          <HBox fx:id="titledPaneChild11" layoutX="29.0" layoutY="29.0" maxHeight="55.0" minHeight="55.0" onMouseClicked="#onMouseClickGetTitledPaneChildren" prefHeight="55.0" prefWidth="180.0" style="-fx-background-radius: 5;">
                                              <cursor>
                                                 <Cursor fx:constant="HAND" />
                                              </cursor>
@@ -59,12 +89,12 @@
                                                 </Label>
                                              </children>
                                           </HBox>
-                                          <HBox fx:id="titledPaneChild2" layoutX="29.0" layoutY="29.0" maxHeight="55.0" minHeight="55.0" onMouseClicked="#onMouseClickGetTitledPaneChildren" prefHeight="55.0" prefWidth="180.0" style="-fx-background-radius: 5;">
+                                          <HBox fx:id="titledPaneChild111" layoutX="29.0" layoutY="164.0" maxHeight="55.0" minHeight="55.0" onMouseClicked="#onMouseClickGetTitledPaneChildren" prefHeight="55.0" prefWidth="180.0" style="-fx-background-radius: 5;">
                                              <cursor>
                                                 <Cursor fx:constant="HAND" />
                                              </cursor>
                                              <children>
-                                                <Label prefHeight="73.0" prefWidth="280.0" text="Khoản chi" textFill="WHITE">
+                                                <Label prefHeight="73.0" prefWidth="280.0" text="Khoản thu" textFill="WHITE">
                                                    <font>
                                                       <Font size="22.0" />
                                                    </font>
@@ -164,7 +194,7 @@
                               </HBox>
                            </children>
                            <padding>
-                              <Insets left="16.0" right="16.0" top="16.0" />
+                              <Insets left="16.0" right="16.0" />
                            </padding>
                         </VBox>
                      </content>

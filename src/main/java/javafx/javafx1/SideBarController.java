@@ -42,7 +42,7 @@ public class SideBarController extends App implements Initializable
     {
 //        List<HBox> listHboxs = new ArrayList<>();
 
-        for (int i = 0; i < 2; i++)
+        for (int i = 0; i < 4; i++)
         {
             listHboxs.add((HBox) tiledPaneContainer.getChildren().get(i));
         }
@@ -76,6 +76,9 @@ public class SideBarController extends App implements Initializable
                 break;
             case "employeeBtn":
                 sceneName = "ManageEmployeeScene";
+                break;
+            case "dbTeachersStaffsBtn":
+                sceneName = "DBTeachersStaffsScene";
                 break;
 
         }
@@ -115,10 +118,21 @@ public class SideBarController extends App implements Initializable
         HBox hbox = (HBox) event.getSource();
         resetAllSidebarItems();
         hbox.setStyle("-fx-background-color: #F05454; -fx-background-radius: 5px;");
+
+        String hboxId = hbox.getId();
+        String sceneName = getSceneName(hboxId);
+
+        FXMLLoader fxmlLoader = null;
+        try {
+            fxmlLoader = new FXMLLoader(getClass().getResource(sceneName + ".fxml"));
+            Parent root = fxmlLoader.load();
+            contentPane.getChildren().removeAll();
+            contentPane.getChildren().setAll(root);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
-
-    // Ham khoi tao (Chay dau tien khi chuong trinh duoc thuc thi)
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         resetAllSidebarItems();

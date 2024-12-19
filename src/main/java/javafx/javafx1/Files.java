@@ -317,4 +317,74 @@ public class Files
             throw new RuntimeException(e);
         }
     }
+    public ResultSet getTeachersStatistical()
+    {
+        String sql = "SELECT b.time AS month, COUNT(DISTINCT a.id) AS total_teachers, "
+                + "AVG(a.age) AS avg_age FROM bills b JOIN accounts a ON b.account_id = a.id "
+                + "WHERE a.role = 2 GROUP BY b.time ORDER BY b.time";
+        PreparedStatement ps;
+        try {
+            ps = connect.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            return rs;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public ResultSet getStaffsStatistical()
+    {
+        String sql = "SELECT b.time AS month, COUNT(DISTINCT a.id) AS total_staffs, "
+                + "AVG(a.age) AS avg_age FROM bills b JOIN accounts a ON b.account_id = a.id "
+                + "WHERE a.role = 3 GROUP BY b.time ORDER BY b.time";
+        PreparedStatement ps;
+        try {
+            ps = connect.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            return rs;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public ResultSet getYears()
+    {
+        String sql = "SELECT DISTINCT RIGHT(time, 4) AS year FROM bills WHERE time IS NOT NULL;";
+        PreparedStatement ps;
+        try {
+            ps = connect.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            return rs;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public ResultSet getTeachersListByYear(int year)
+    {
+        String sql = "SELECT DISTINCT a.id, a.name AS teacher_name "
+                +"FROM bills b JOIN accounts a ON b.account_id = a.id "
+                +"WHERE b.time LIKE '%/" +year+ "'";
+        PreparedStatement ps;
+        try {
+            ps = connect.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            return rs;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public ResultSet getTeacherJobsPerMonth(int id, int year)
+    {
+        String sql = "SELECT a.id AS teacher_id, a.name AS teacher_name, "
+                + "MONTH(STR_TO_DATE(l.title, '%d/%m/%Y')) AS month, COUNT(*) AS total_lessons "
+                + "FROM lessons l JOIN classes c ON l.class_id = c.id JOIN accounts a "
+                + "ON c.teacher_id = a.id WHERE a.id = " +id+ " AND l.title LIKE '%/" +year+ "' "
+                + "GROUP BY a.id, a.name, MONTH(STR_TO_DATE(l.title, '%d/%m/%Y')) ORDER BY a.id, month";
+        PreparedStatement ps;
+        try {
+            ps = connect.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            return rs;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
