@@ -1,6 +1,8 @@
 package javafx.javafx1;
 
+import javafx.animation.ScaleTransition;
 import javafx.animation.Timeline;
+import javafx.animation.TranslateTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -19,6 +21,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Callback;
+import javafx.util.Duration;
 import org.kordamp.ikonli.javafx.FontIcon;
 
 
@@ -29,7 +32,6 @@ import java.util.ResourceBundle;
 public class ManageStudentController extends App implements Initializable {
     Person student = null;
     Accounts acc = new Accounts();
-    private static Timeline gameLoop;
     double orgSceneX, orgSceneY, orgTranslateX, orgTranslateY;
     @FXML
     private TableView<Person> studentsTable;
@@ -91,7 +93,7 @@ public class ManageStudentController extends App implements Initializable {
                         student.getClassName(),
                         rs.getString("time"),
                         student.getFee(),
-                        rs.getInt("status") == 1 ? "Đã đóng" : "Chưa đóng"
+                        rs.getInt("status") == 1 ? "Chưa đóng" : "Đã đóng"
                 ));
             }
         } catch (Exception e) {
@@ -124,10 +126,8 @@ public class ManageStudentController extends App implements Initializable {
                             hbox.setStyle("-fx-alignment:center; -fx-cursor: hand; -fx-background-color:  #30475E; -fx-background-radius: 8;");
 
                             hbox.setOnMouseClicked((MouseEvent event) -> {
-//                                acc.updateBillStatus(billTable.getSelectionModel().getSelectedItem().getBId());
-//                                refreshBillTable();
-
-                                System.out.println(bill.getBId());
+                                acc.updateBillStatus(billTable.getSelectionModel().getSelectedItem().getBId());
+                                refreshBillTable();
                             });
                             hbox.setOnMouseEntered((MouseEvent event) -> {
                                 HBox myHbox = (HBox) event.getSource();
@@ -207,7 +207,7 @@ public class ManageStudentController extends App implements Initializable {
     }
 
     @FXML
-    private void onAddStudentClick(MouseEvent event){
+    private void onAddStudentClick(){
         // bat stage form them student
         System.out.println("Add!!");
         try {
@@ -294,13 +294,15 @@ public class ManageStudentController extends App implements Initializable {
     public void onStudentTableClick(MouseEvent event){
         student = studentsTable.getSelectionModel().getSelectedItem();
         if(student != null){
-            billStkPane.setVisible(firstClick);
             double posX = event.getX();
             double posY = event.getY();
+            ScaleTransition scaleTransition = new ScaleTransition(Duration.seconds(.15), billStkPane);
+            TranslateTransition translateTransition = new TranslateTransition(Duration.seconds(.15), billStkPane);
 
             if(posX + 23 < 1080 - 526 && posY + 107 < 594-120){
                 billStkPane.setLayoutX(posX + 30);
                 billStkPane.setLayoutY(posY + 120);
+
             } else if (posX + 23 >= 1080 - 526){
                 if(posY + 107 >= 594 -100){
                     billStkPane.setLayoutX(1080-526);
@@ -313,7 +315,20 @@ public class ManageStudentController extends App implements Initializable {
                 billStkPane.setLayoutX(posX + 40);
                 billStkPane.setLayoutY(594 - 100);
             }
-//            System.out.println(posX + " " + posY);
+
+            if(firstClick){
+                translateTransition.setFromX(-200);
+                translateTransition.setFromY(-90);
+                translateTransition.setToX(0);
+                translateTransition.setToY(0);
+                scaleTransition.setFromX(0.1);
+                scaleTransition.setFromY(0.1);
+                scaleTransition.setToX(1);
+                scaleTransition.setToY(1);
+                translateTransition.play();
+                scaleTransition.play();
+            }
+            billStkPane.setVisible(firstClick);
             firstClick = !firstClick;
             refreshBillTable();
         }

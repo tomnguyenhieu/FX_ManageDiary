@@ -275,8 +275,61 @@ public class Accounts
         String sql = "UPDATE bills SET status = 1 WHERE id = " + billId;
         try {
             PreparedStatement ps = connect.prepareStatement(sql);
-            ps.setInt(1, billId);
             ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public ResultSet getStudentGender(){
+        String sql = "SELECT"
+                    + " SUM(CASE WHEN gender = 'Nam' THEN 1 ELSE 0 END) AS 'Nam',"
+                    + " SUM(CASE WHEN gender = 'Nữ' THEN 1 ELSE 0 END) AS 'Nữ'"
+                    + " FROM accounts WHERE role = 4 AND status = 1;";
+        try {
+            PreparedStatement ps = connect.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            return rs;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public ResultSet getStudentAgeData(){
+        String sql = "SELECT " +
+                    " SUM(CASE WHEN age < 12 THEN 1 ELSE 0 END) AS under_12, " +
+                    " SUM(CASE WHEN age >= 12 AND age < 22 THEN 1 ELSE 0 END) AS under_22, " +
+                    " SUM(CASE WHEN age >= 22 THEN 1 ELSE 0 END) AS over_22" +
+                    " FROM accounts WHERE role = 4;";
+        try {
+            PreparedStatement ps = connect.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            return rs;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public int avgStudentAge(){
+        String sql = "SELECT ROUND(AVG(age)) AS avg_age " +
+                "FROM accounts " +
+                "WHERE role = 4;";
+        int avgAge = 0;
+        try {
+            PreparedStatement ps = connect.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()){
+                avgAge = rs.getInt("avg_age");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return avgAge;
+    }
+    public ResultSet getStudentStatistical(){
+        String sql = "SELECT CONCAT(SUBSTR(l.title, LOCATE('/', l.title, LOCATE('/', l.title) + 1) + 1), '-', LPAD(SUBSTRING_INDEX(SUBSTRING_INDEX(l.title, '/', 2), '/', -1), 2, '0')) AS month_year, COUNT(DISTINCT c.student_id) AS total_students FROM duongduaeducation.lessons l JOIN duongduaeducation.comments c ON l.id = c.lesson_id GROUP BY month_year ORDER BY month_year;";
+        try {
+            PreparedStatement ps = connect.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            return rs;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

@@ -317,6 +317,24 @@ public class Files
             throw new RuntimeException(e);
         }
     }
+    public boolean addStudentBill(int studentId, String time)
+    {
+        String sql = "INSERT INTO bills("
+                + "account_id, time, status, type)"
+                + " VALUES(?,?,?, ?)";
+        PreparedStatement ps;
+        try {
+            ps = connect.prepareStatement(sql);
+            ps.setInt(1, studentId);
+            ps.setString(2, time);
+            ps.setInt(3, 1);
+            ps.setInt(4, 4);
+            ps.executeUpdate();
+            return true;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
     public ResultSet getTeachersStatistical()
     {
         String sql = "SELECT b.time AS month, COUNT(DISTINCT a.id) AS total_teachers, "

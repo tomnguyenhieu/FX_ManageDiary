@@ -16,7 +16,7 @@
 
 <AnchorPane maxHeight="720.0" maxWidth="1000.0" minHeight="720.0" minWidth="1000.0" prefHeight="720.0" prefWidth="1000.0" style="-fx-background-color: #FFFFFF;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javafx.javafx1.ManageStudentController">
    <children>
-      <TableView fx:id="studentsTable" fixedCellSize="35.0" layoutX="23.0" layoutY="107.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#onStudentTableClick" prefHeight="594.0" prefWidth="954.0" style="-fx-background-color: F5F5F5;">
+      <TableView fx:id="studentsTable" fixedCellSize="45.0" layoutX="23.0" layoutY="107.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#onStudentTableClick" prefHeight="594.0" prefWidth="954.0" style="-fx-background-color: F5F5F5;">
          <columns>
             <TableColumn fx:id="idCol" prefWidth="20.799958050251007" text="Id" />
             <TableColumn fx:id="nameCol" prefWidth="98.93340682983398" text="Ho va ten" />

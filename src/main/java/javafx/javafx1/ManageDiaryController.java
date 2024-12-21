@@ -339,6 +339,8 @@ public class ManageDiaryController extends App
                 if (isConfirm)
                 {
                     uploadFile.storeExcelInfo(classId, titleValue, contentValue);
+                    String time = titleValue.substring(3);
+                    Files files = new Files();
 
                     for (List<String> item : listExcelComment)
                     {
@@ -346,17 +348,28 @@ public class ManageDiaryController extends App
                         String studentComment = item.get(2);
 
                         uploadFile.storeExcelComment(studentId, titleValue, studentComment);
-                    }
 
+                        boolean checkEB = false;
+                        ResultSet rs = files.checkExistedBill(studentId, time);
+                        try{
+                            while(rs.next()){
+                                checkEB = true;
+                            }
+                        } catch (Exception e) {
+                            throw new RuntimeException(e);
+                        }
+                        if (!checkEB)
+                        {
+                            files.addStudentBill(studentId, time);
+                        }
+                    }
                     addLessonBtn(countGlobal);
                     reloadListLessons();
                     displayLessons(classIdGlobal);
                     loadTable1Comment(uploadFile.findLessonByTitle(titleValue));
                     loadTable2Comment(uploadFile.findLessonByTitle(titleValue));
 
-                    Files files = new Files();
                     boolean isExistedBill = false;
-                    String time = titleValue.substring(3);
                     System.out.println(time);
 
                     ResultSet rs1 = files.getTeacherIdByClassName(classValue);
@@ -393,6 +406,9 @@ public class ManageDiaryController extends App
             alert.show();
         }
     }
+
+
+
     public void onMouseClickGetTblCommentsByLessonName(MouseEvent event)
     {
         Files file = new Files();
