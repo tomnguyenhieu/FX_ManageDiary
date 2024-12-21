@@ -21,6 +21,8 @@ import javafx.stage.StageStyle;
 import org.kordamp.ikonli.javafx.FontIcon;
 
 import javax.swing.plaf.synth.SynthUI;
+import javax.swing.text.StyledEditorKit;
+import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -259,5 +261,23 @@ public class ManageClassController extends App
 
         tilePane.getChildren().clear();
         displayClasses();
+    }
+    public void onActionExportExcel()
+    {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("ExportExcelScene.fxml"));
+            Parent root = loader.load();
+            Stage stage = new Stage();
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.initStyle(StageStyle.TRANSPARENT);
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.show();
+
+            stage.setOnCloseRequest((event) -> {
+            });
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

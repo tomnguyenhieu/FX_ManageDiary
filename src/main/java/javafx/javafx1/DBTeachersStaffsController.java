@@ -11,17 +11,11 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
-
-
 import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 import java.time.LocalDate;
-import java.util.SequencedSet;
 
 public class DBTeachersStaffsController implements Initializable
 {
@@ -174,6 +168,7 @@ public class DBTeachersStaffsController implements Initializable
             throw new RuntimeException(e);
         }
 
+        dataSeries.setName("Số lượng lessons");
         barChart.getData().clear();
         barChart.getData().add(dataSeries);
     }

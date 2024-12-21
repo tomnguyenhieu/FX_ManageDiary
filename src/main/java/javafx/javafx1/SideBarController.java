@@ -80,7 +80,9 @@ public class SideBarController extends App implements Initializable
             case "dbTeachersStaffsBtn":
                 sceneName = "DBTeachersStaffsScene";
                 break;
-
+            case "dbChiBtn":
+                sceneName = "DBChiScene";
+                break;
         }
         return sceneName;
     }
@@ -120,6 +122,7 @@ public class SideBarController extends App implements Initializable
         hbox.setStyle("-fx-background-color: #F05454; -fx-background-radius: 5px;");
 
         String hboxId = hbox.getId();
+        System.out.println(hboxId);
         String sceneName = getSceneName(hboxId);
 
         FXMLLoader fxmlLoader = null;

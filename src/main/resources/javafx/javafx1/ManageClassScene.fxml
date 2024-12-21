@@ -36,6 +36,14 @@
                         <Insets />
                      </HBox.margin>
                   </Button>
+                  <Button fx:id="btnExportExcel" layoutX="729.0" layoutY="71.0" mnemonicParsing="false" onAction="#onActionExportExcel" prefHeight="35.0" prefWidth="278.0" style="-fx-background-color: #30475E;" text="Export mẫu excel" textFill="WHITE">
+                     <font>
+                        <Font size="20.0" />
+                     </font>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </Button>
                </children>
                <padding>
                   <Insets bottom="16.0" left="16.0" right="16.0" />

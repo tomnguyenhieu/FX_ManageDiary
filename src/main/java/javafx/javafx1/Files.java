@@ -387,4 +387,74 @@ public class Files
             throw new RuntimeException(e);
         }
     }
+    public ResultSet getTotalSalary(int type)
+    {
+        String sql = "SELECT time AS month, SUM(total_price) AS total_salary "
+                + "FROM bills WHERE type = " +type+ " AND STATUS = 2 GROUP BY time ORDER BY time;";
+        PreparedStatement ps;
+        try {
+            ps = connect.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            return rs;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public ResultSet getTotalCSVC()
+    {
+        String sql = "SELECT time AS month, SUM(quantity) AS total_quantity "
+                + "FROM bills WHERE TYPE = 3 AND STATUS = 2 GROUP BY time ORDER BY time;";
+        PreparedStatement ps;
+        try {
+            ps = connect.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            return rs;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public boolean storeBill(String name, int quantity, int price, int totalPrice, String month)
+    {
+        String sql = "INSERT INTO bills (name, time, quantity, price, total_price, status, type) "
+                + "VALUE (?,?,?,?,?,?,?)";
+        PreparedStatement ps;
+        try {
+            ps = connect.prepareStatement(sql);
+            ps.setString(1, name);
+            ps.setString(2, month);
+            ps.setInt(3, quantity);
+            ps.setInt(4, price);
+            ps.setInt(5, totalPrice);
+            ps.setInt(6, 2);
+            ps.setInt(7, 3);
+            ps.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public ResultSet getClasses()
+    {
+        String sql = "SELECT * FROM classes WHERE deleted = 1";
+        PreparedStatement ps;
+        try {
+            ps = connect.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            return rs;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public ResultSet getStudentsByClassName(int classId)
+    {
+        String sql = "SELECT * FROM accounts WHERE class_id = " + classId;
+        PreparedStatement ps;
+        try {
+            ps = connect.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            return rs;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

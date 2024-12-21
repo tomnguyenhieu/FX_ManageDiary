@@ -89,12 +89,12 @@
                                                 </Label>
                                              </children>
                                           </HBox>
-                                          <HBox fx:id="titledPaneChild111" layoutX="29.0" layoutY="164.0" maxHeight="55.0" minHeight="55.0" onMouseClicked="#onMouseClickGetTitledPaneChildren" prefHeight="55.0" prefWidth="180.0" style="-fx-background-radius: 5;">
+                                          <HBox fx:id="dbChiBtn" layoutX="29.0" layoutY="164.0" maxHeight="55.0" minHeight="55.0" onMouseClicked="#onMouseClickGetTitledPaneChildren" prefHeight="55.0" prefWidth="180.0" style="-fx-background-radius: 5;">
                                              <cursor>
                                                 <Cursor fx:constant="HAND" />
                                              </cursor>
                                              <children>
-                                                <Label prefHeight="73.0" prefWidth="280.0" text="Khoản thu" textFill="WHITE">
+                                                <Label fx:id="dbChiBtn" prefHeight="73.0" prefWidth="280.0" text="Khoản chi" textFill="WHITE">
                                                    <font>
                                                       <Font size="22.0" />
                                                    </font>
