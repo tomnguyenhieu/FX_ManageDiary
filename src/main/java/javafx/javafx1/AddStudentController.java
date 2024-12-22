@@ -117,7 +117,7 @@ public class AddStudentController extends App implements Initializable {
         statusCb.setValue(status);
     }
     public void onConfirmClick(ActionEvent event){
-        if(ageCb.getValue() != null && genderCb.getValue() != null && classCb.getValue() != null && addressCb.getValue() != null && statusCb.getValue() != null){
+        if(ageCb.getValue() != null && genderCb.getValue() != null && classCb.getValue() != null && addressCb.getValue() != null && statusCb.getValue() != null && pFeeFld.getText() != ""){
             //comboBox khong null
             String name = nameFld.getText();
             String age = ageCb.getValue().toString();

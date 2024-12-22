@@ -348,4 +348,24 @@ public class Accounts
             throw new RuntimeException(e);
         }
     }
+    public ResultSet getTopStudent(){
+        String sql = "SELECT c.student_id, a.name AS student_name, c.score, cl.name AS class_name, a.address FROM comments c JOIN lessons l ON c.lesson_id = l.id JOIN accounts a ON c.student_id = a.id JOIN classes cl ON a.class_id = cl.id WHERE l.title = ( SELECT MAX(title) FROM lessons ) ORDER BY c.score DESC LIMIT 10;";
+        try {
+            PreparedStatement ps = connect.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            return rs;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public ResultSet getClassStudentLesson(){
+        String sql = "SELECT cl.id AS class_id, cl.name AS class_name, COUNT(DISTINCT l.id) AS total_lessons, COUNT(DISTINCT a.id) AS total_students FROM classes cl LEFT JOIN lessons l ON cl.id = l.class_id LEFT JOIN accounts a ON cl.id = a.class_id AND a.role = 4 WHERE cl.deleted = 1 GROUP BY cl.id, cl.name ORDER BY cl.id;";
+        try {
+            PreparedStatement ps = connect.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            return rs;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
