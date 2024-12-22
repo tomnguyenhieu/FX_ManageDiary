@@ -68,4 +68,7 @@ public class Bill {
         return bStatus.get();
     }
 
+    public String getMonth() {
+        return month.get();
+    }
 }

@@ -62,16 +62,17 @@ public class Files
             return false;
         }
     }
-    public boolean storeExcelComment(int studentId, String lessonTitle, String studentComment) {
+    public boolean storeExcelComment(int studentId, String lessonTitle, String studentComment, int studentScore) {
         String sql = "INSERT INTO comments("
-                + "student_id, lesson_id, comment)"
-                + " VALUES(?,?,?)";
+                + "student_id, lesson_id, comment, score)"
+                + " VALUES(?,?,?,?)";
         PreparedStatement ps;
         try {
             ps = connect.prepareStatement(sql);
             ps.setInt(1, studentId);
             ps.setInt(2, findLessonByTitle(lessonTitle));
             ps.setString(3, studentComment);
+            ps.setInt(4, studentScore);
             ps.executeUpdate();
             return true;
         } catch (Exception e) {
@@ -95,7 +96,7 @@ public class Files
     }
     public ResultSet getClassComments(int lessonId)
     {
-        String sql = "SELECT lessons.id AS lesson_id, accounts.name AS student_name, comments.comment "
+        String sql = "SELECT lessons.id AS lesson_id, accounts.name AS student_name, comments.comment, comments.score "
                 +"FROM lessons JOIN comments ON lessons.id = comments.lesson_id "
                 + "JOIN accounts ON accounts.id = comments.student_id "
                 + "WHERE lessons.id = '" +lessonId+ "'";
@@ -231,7 +232,7 @@ public class Files
     }
     public ResultSet getCommentByLessonId(int lessonId)
     {
-        String sql = "SELECT comments.student_id, accounts.name, comments.comment "
+        String sql = "SELECT comments.student_id, accounts.name, comments.comment, comments.score "
                 + "FROM comments JOIN accounts "
                 + "ON comments.student_id = accounts.id "
                 + "WHERE lesson_id = " + lessonId;
@@ -301,16 +302,12 @@ public class Files
     }
     public boolean addTeacherBill(int teacherId, String time)
     {
-        String sql = "INSERT INTO bills("
-                + "account_id, time, status, type)"
-                + " VALUES(?,?,?, ?)";
+        String sql = "INSERT INTO bills (account_id, time, total_price, status, type) "
+                + "SELECT " +teacherId+ ", '" +time+ "', salary, 1, 1 FROM accounts "
+                + "WHERE accounts.id = " +teacherId+ ";";
         PreparedStatement ps;
         try {
             ps = connect.prepareStatement(sql);
-            ps.setInt(1, teacherId);
-            ps.setString(2, time);
-            ps.setInt(3, 1);
-            ps.setInt(4, 1);
             ps.executeUpdate();
             return true;
         } catch (Exception e) {

@@ -24,7 +24,7 @@ import javafx.stage.WindowEvent;
  * @author Admin
  */
 public class AddTeacherController extends App implements Initializable {
-  private Accounts acc = new Accounts();
+    private Accounts acc = new Accounts();
     private boolean edit;
     public void setEdit(boolean edit) {
         this.edit = edit;
@@ -69,15 +69,15 @@ public class AddTeacherController extends App implements Initializable {
         // Khoi tao cac comboBox
         genderCb.getItems().add("Nam");
         genderCb.getItems().add("Nữ");
-        
+
         for(int i = 1; i < 100; i++){
             ageCb.getItems().add(i);
         }
-        
+
         statusCb.getItems().add("1");
         statusCb.getItems().add("2");
     }
-    public void setTextField(String name, int age, String gender, String email, String password, String phone, String address, int status, String certificate, int salary){
+    public void setTextField(String name, int age, String gender, String email, String password, String phone, String address, String status, String certificate, int salary){
         // khoi tao thong tin dien san trong form
         nameFld.setText(name);
         ageCb.setValue(age);

@@ -97,7 +97,8 @@
                         <TableView fx:id="tblComment2" prefHeight="432.0" prefWidth="390.0">
                           <columns>
                             <TableColumn fx:id="tblCol2StudentName" prefWidth="224.80004274845123" text="Họ và tên" />
-                              <TableColumn fx:id="tblCol2StudentComment" prefWidth="475.2000427246094" text="Nhận xét" />
+                              <TableColumn fx:id="tblCol2StudentComment" prefWidth="407.1999969482422" text="Nhận xét" />
+                              <TableColumn fx:id="tblCol2StudentScore" prefWidth="117.60003662109375" text="Điểm số" />
                           </columns>
                            <columnResizePolicy>
                               <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />

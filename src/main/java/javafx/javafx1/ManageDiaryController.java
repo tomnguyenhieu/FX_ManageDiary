@@ -46,6 +46,7 @@ public class ManageDiaryController extends App
     private String className = "";
     private String commentStudentName = "";
     private String commentStudentComment = "";
+    private int commentStudentScore = 0;
     public Files uploadFile = new Files();
     private boolean isConfirm = false;
     private int countGlobal = 0;
@@ -69,6 +70,8 @@ public class ManageDiaryController extends App
     private TableColumn<Comment, String> tblCol2StudentName;
     @FXML
     private TableColumn<Comment, String> tblCol2StudentComment;
+    @FXML
+    private TableColumn<Comment, Integer> tblCol2StudentScore;
 
     @FXML
     private VBox lessonsContainer;
@@ -118,8 +121,9 @@ public class ManageDiaryController extends App
             {
                 commentStudentName = classComments.getString("student_name");
                 commentStudentComment = classComments.getString("comment");
+                commentStudentScore = classComments.getInt("score");
 
-                data.add(new Comment(commentStudentName, commentStudentComment));
+                data.add(new Comment(commentStudentName, commentStudentComment, commentStudentScore));
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -127,6 +131,7 @@ public class ManageDiaryController extends App
 
         tblCol2StudentName.setCellValueFactory(new PropertyValueFactory<Comment, String>("commentStudentName"));
         tblCol2StudentComment.setCellValueFactory(new PropertyValueFactory<Comment, String>("commentStudentComment"));
+        tblCol2StudentScore.setCellValueFactory(new PropertyValueFactory<Comment, Integer>("commentStudentScore"));
 
         tblComment2.setItems(data);
     }
@@ -178,15 +183,22 @@ public class ManageDiaryController extends App
                 XSSFCell studentIdCell = studentCommentRow.getCell(0);
                 XSSFCell studentNameCell = studentCommentRow.getCell(1);
                 XSSFCell studentCommentCell = studentCommentRow.getCell(2);
+                XSSFCell studentScoreCell = studentCommentRow.getCell(3);
 
-                int tmp = (int) studentIdCell.getNumericCellValue();
-                String studentIdValue = Integer.toString(tmp);
+//                int studentId = (int) studentIdCell.getNumericCellValue();
+//                String _studentIdValue = Integer.toString(studentId);
+                String _studentIdValue = studentIdCell.getStringCellValue();
                 String studentNameValue = studentNameCell.getStringCellValue();
                 String studentCommentValue = studentCommentCell.getStringCellValue();
+                int studentScoreValue = (int) studentScoreCell.getNumericCellValue();
+                String _studentScoreValue = Integer.toString(studentScoreValue);
 
-                list.add(studentIdValue);
+                System.out.println(_studentIdValue + " " + studentNameValue + " " + studentCommentValue + " " + _studentScoreValue);
+
+                list.add(_studentIdValue);
                 list.add(studentNameValue);
                 list.add(studentCommentValue);
+                list.add(_studentScoreValue);
 
                 arrayList.add(list);
             }
@@ -344,10 +356,11 @@ public class ManageDiaryController extends App
 
                     for (List<String> item : listExcelComment)
                     {
-                        int studentId = Integer.parseInt(item.get(0));
+                        int studentId = Integer.parseInt(item.getFirst());
                         String studentComment = item.get(2);
+                        int studentScore = Integer.parseInt(item.get(3));
 
-                        uploadFile.storeExcelComment(studentId, titleValue, studentComment);
+                        uploadFile.storeExcelComment(studentId, titleValue, studentComment, studentScore);
 
                         boolean checkEB = false;
                         ResultSet rs = files.checkExistedBill(studentId, time);
@@ -363,6 +376,7 @@ public class ManageDiaryController extends App
                             files.addStudentBill(studentId, time);
                         }
                     }
+
                     addLessonBtn(countGlobal);
                     reloadListLessons();
                     displayLessons(classIdGlobal);
@@ -370,7 +384,6 @@ public class ManageDiaryController extends App
                     loadTable2Comment(uploadFile.findLessonByTitle(titleValue));
 
                     boolean isExistedBill = false;
-                    System.out.println(time);
 
                     ResultSet rs1 = files.getTeacherIdByClassName(classValue);
                     int teacherId = 0;
@@ -382,13 +395,32 @@ public class ManageDiaryController extends App
                     } catch (SQLException e) {
                         throw new RuntimeException(e);
                     }
-                    System.out.println(teacherId);
 
                     ResultSet rs = files.checkExistedBill(teacherId, time);
                     try {
                         while (rs.next())
                         {
                             isExistedBill = true;
+                            int accId = rs.getInt("account_id");
+                            String billMonth = rs.getString("time");
+
+                            Accounts acc = new Accounts();
+                            ResultSet rs2 = acc.getTeacherInfoByAccountId(accId);
+
+                            try {
+                                while (rs2.next())
+                                {
+                                    String month = rs2.getString("month_taught");
+                                    int monthly_salary = rs2.getInt("monthly_salary");
+                                    int billId = rs2.getInt("bill_id");
+
+                                    if (month.equals(billMonth)) {
+                                        acc.updateTotalPrice(billId, monthly_salary);
+                                    }
+                                }
+                            } catch (SQLException e) {
+                                throw new RuntimeException(e);
+                            }
                         }
                     } catch (SQLException e) {
                         throw new RuntimeException(e);
@@ -406,9 +438,6 @@ public class ManageDiaryController extends App
             alert.show();
         }
     }
-
-
-
     public void onMouseClickGetTblCommentsByLessonName(MouseEvent event)
     {
         Files file = new Files();
@@ -495,10 +524,13 @@ public class ManageDiaryController extends App
                 String _studentId = studentId.toString();
                 String studentName = rs.getString("name");
                 String studentComment = rs.getString("comment");
+                Integer studentScore = rs.getInt("score");
+                String _studentScore = studentScore.toString();
 
                 tmpList.add(_studentId);
                 tmpList.add(studentName);
                 tmpList.add(studentComment);
+                tmpList.add(_studentScore);
 
                 classComments.add(tmpList);
             }
@@ -562,6 +594,8 @@ public class ManageDiaryController extends App
                 labelName.setCellValue("Tên");
                 XSSFCell labelComment = labelRow.createCell(2);
                 labelComment.setCellValue("Nhận xét");
+                XSSFCell labelScore = labelRow.createCell(3);
+                labelScore.setCellValue("Điểm số");
 
                 for (int i = 0; i < classComments.size(); i++)
                 {

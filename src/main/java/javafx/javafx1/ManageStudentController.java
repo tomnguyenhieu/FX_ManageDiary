@@ -32,6 +32,7 @@ import java.util.ResourceBundle;
 public class ManageStudentController extends App implements Initializable {
     Person student = null;
     Accounts acc = new Accounts();
+    private static Timeline gameLoop;
     double orgSceneX, orgSceneY, orgTranslateX, orgTranslateY;
     @FXML
     private TableView<Person> studentsTable;
@@ -302,7 +303,6 @@ public class ManageStudentController extends App implements Initializable {
             if(posX + 23 < 1080 - 526 && posY + 107 < 594-120){
                 billStkPane.setLayoutX(posX + 30);
                 billStkPane.setLayoutY(posY + 120);
-
             } else if (posX + 23 >= 1080 - 526){
                 if(posY + 107 >= 594 -100){
                     billStkPane.setLayoutX(1080-526);
@@ -315,7 +315,6 @@ public class ManageStudentController extends App implements Initializable {
                 billStkPane.setLayoutX(posX + 40);
                 billStkPane.setLayoutY(594 - 100);
             }
-
             if(firstClick){
                 translateTransition.setFromX(-200);
                 translateTransition.setFromY(-90);

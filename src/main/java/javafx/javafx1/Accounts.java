@@ -253,15 +253,18 @@ public class Accounts
     }
 
     public ResultSet getTeacherInfoByAccountId(int accountId){
-        String sql = "SELECT a.id AS teacher_id, a.name AS teacher_name, "
-                + "a.salary, CAST(DATE_FORMAT(STR_TO_DATE(l.title, '%d/%m/%Y'), '%m/%Y') "
-                + "AS CHAR) AS month_taught, COUNT(l.id) AS lessons_count, "
-                + "COUNT(l.id) * a.salary AS monthly_salary, b.status AS salary_status "
-                + "FROM accounts a JOIN classes c ON a.id = c.teacher_id "
-                + "JOIN lessons l ON c.id = l.class_id LEFT JOIN bills b "
-                + "ON a.id = b.account_id WHERE a.role = 2 "
-                + "AND a.id = " +accountId+ " GROUP BY a.id, a.name, a.salary, month_taught, b.status "
-                + "ORDER BY a.id, month_taught";
+        String sql = "SELECT a.id AS teacher_id, a.name AS teacher_name, a.salary, "
+                + "CAST(DATE_FORMAT(STR_TO_DATE(l.title, '%d/%m/%Y'), '%m/%Y') "
+                + "AS CHAR) AS month_taught, COUNT(DISTINCT l.id) AS lessons_count, "
+                + "COUNT(DISTINCT l.id) * a.salary AS monthly_salary, "
+                + "MAX(b.status) AS salary_status, b.id AS bill_id FROM accounts a "
+                + "JOIN classes c ON a.id = c.teacher_id "
+                + "JOIN lessons l ON c.id = l.class_id "
+                + "LEFT JOIN bills b ON a.id = b.account_id "
+                + "AND b.time = CAST(DATE_FORMAT(STR_TO_DATE(l.title, '%d/%m/%Y'), '%m/%Y') AS CHAR) "
+                + "WHERE a.role = 2 AND a.id = " + accountId
+                + " GROUP BY a.id, a.name, a.salary, month_taught, b.id "
+                + "ORDER BY a.id, month_taught;";
         try {
             PreparedStatement ps = connect.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
@@ -275,17 +278,28 @@ public class Accounts
         String sql = "UPDATE bills SET status = 1 WHERE id = " + billId;
         try {
             PreparedStatement ps = connect.prepareStatement(sql);
+            ps.setInt(1, billId);
             ps.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
+    public void updateTotalPrice (int billId, int monthly_salary) {
+        String sql = "UPDATE bills SET total_price = " + monthly_salary
+                + " WHERE bills.id = " + billId;
+        try {
+            PreparedStatement ps = connect.prepareStatement(sql);
+            ps.execute();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
     public ResultSet getStudentGender(){
         String sql = "SELECT"
-                    + " SUM(CASE WHEN gender = 'Nam' THEN 1 ELSE 0 END) AS 'Nam',"
-                    + " SUM(CASE WHEN gender = 'Nữ' THEN 1 ELSE 0 END) AS 'Nữ'"
-                    + " FROM accounts WHERE role = 4 AND status = 1;";
+                + " SUM(CASE WHEN gender = 'Nam' THEN 1 ELSE 0 END) AS 'Nam',"
+                + " SUM(CASE WHEN gender = 'Nữ' THEN 1 ELSE 0 END) AS 'Nữ'"
+                + " FROM accounts WHERE role = 4 AND status = 1;";
         try {
             PreparedStatement ps = connect.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
@@ -296,10 +310,10 @@ public class Accounts
     }
     public ResultSet getStudentAgeData(){
         String sql = "SELECT " +
-                    " SUM(CASE WHEN age < 12 THEN 1 ELSE 0 END) AS under_12, " +
-                    " SUM(CASE WHEN age >= 12 AND age < 22 THEN 1 ELSE 0 END) AS under_22, " +
-                    " SUM(CASE WHEN age >= 22 THEN 1 ELSE 0 END) AS over_22" +
-                    " FROM accounts WHERE role = 4;";
+                " SUM(CASE WHEN age < 12 THEN 1 ELSE 0 END) AS under_12, " +
+                " SUM(CASE WHEN age >= 12 AND age < 22 THEN 1 ELSE 0 END) AS under_22, " +
+                " SUM(CASE WHEN age >= 22 THEN 1 ELSE 0 END) AS over_22" +
+                " FROM accounts WHERE role = 4;";
         try {
             PreparedStatement ps = connect.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();

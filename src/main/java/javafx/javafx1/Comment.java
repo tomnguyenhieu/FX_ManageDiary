@@ -12,12 +12,14 @@ public class Comment {
     // Table 2
     private SimpleStringProperty commentStudentName;
     private SimpleStringProperty commentStudentComment;
+    private int commentStudentScore;
 
     public Comment() {};
 
-    public Comment(String cStudentName, String cStudentComment) {
+    public Comment(String cStudentName, String cStudentComment, int cStudentScore) {
         this.commentStudentName = new SimpleStringProperty(cStudentName);
         this.commentStudentComment = new SimpleStringProperty(cStudentComment);
+        this.commentStudentScore = cStudentScore;
     }
 
     public Comment(String cTitle, String cContent, String cClassName, String cTeacherName) {
@@ -53,6 +55,10 @@ public class Comment {
     public String getCommentStudentComment() {
 
         return commentStudentComment.get();
+    }
+
+    public int getCommentStudentScore() {
+        return commentStudentScore;
     }
 }
 

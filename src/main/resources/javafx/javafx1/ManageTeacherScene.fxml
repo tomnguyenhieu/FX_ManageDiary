@@ -69,7 +69,7 @@
             </HBox>
          </children>
       </HBox>
-      <TableView fx:id="teachersTable" layoutX="25.0" layoutY="107.0" onMouseClicked="#onTeacherSelected" prefHeight="371.0" prefWidth="950.0" style="-fx-background-color: F5F5F5;">
+      <TableView fx:id="teachersTable" layoutX="25.0" layoutY="107.0" onMouseClicked="#onTeacherSelected" prefHeight="572.0" prefWidth="950.0" style="-fx-background-color: F5F5F5;">
          <columns>
             <TableColumn fx:id="idCol" prefWidth="30.333332061767578" text="Id" />
             <TableColumn fx:id="nameCol" prefWidth="171.0" text="Họ và tên" />
@@ -84,7 +84,7 @@
             <TableColumn fx:id="statusCol" minWidth="0.0" prefWidth="80.33331298828125" text="Trạng thái" />
          </columns>
       </TableView>
-      <StackPane alignment="BOTTOM_RIGHT" layoutX="870.0" layoutY="375.0" onMouseDragged="#onBtnAddDragged" onMousePressed="#onBtnAddPressed" onMouseReleased="#onBtnExit" prefHeight="84.0" prefWidth="86.0">
+      <StackPane alignment="BOTTOM_RIGHT" layoutX="870.0" layoutY="565.0" onMouseDragged="#onBtnAddDragged" onMousePressed="#onBtnAddPressed" onMouseReleased="#onBtnExit" prefHeight="84.0" prefWidth="86.0">
          <children>
             <Button mnemonicParsing="false" onMouseClicked="#onAddTeacherClick" prefHeight="70.0" prefWidth="70.0" style="-fx-background-color: #30475E; -fx-background-radius: 10;" textFill="WHITE">
                <font>
@@ -104,16 +104,20 @@
             </FontIcon>
          </children>
       </StackPane>
-      <TableView fx:id="teacherDetailTable" layoutX="24.0" layoutY="503.0" prefHeight="200.0" prefWidth="952.0" style="-fx-background-color: F5F5F5;">
-         <columns>
-            <TableColumn fx:id="detailIdCol" prefWidth="114.33332824707031" text="Id giáo viên" />
-            <TableColumn fx:id="detailNameCol" prefWidth="190.6666717529297" text="Họ và tên" />
-            <TableColumn fx:id="monthCol" prefWidth="161.6666717529297" text="Tháng" />
-            <TableColumn fx:id="lessonQtyCol" prefWidth="106.33334350585938" text="Số buổi" />
-            <TableColumn fx:id="monthSalaryCol" minWidth="0.0" prefWidth="141.0" text="Lương tháng" />
-            <TableColumn fx:id="detailStatusCol" minWidth="0.0" prefWidth="113.66668701171875" text="Trạng thái" />
-            <TableColumn fx:id="updateSalarySttCol" minWidth="0.0" prefWidth="122.33331298828125" />
-         </columns>
-      </TableView>
+      <StackPane fx:id="detailPane" layoutX="33.0" layoutY="510.0" prefHeight="150.0" prefWidth="818.0">
+         <children>
+            <TableView fx:id="teacherDetailTable" prefHeight="150.0" prefWidth="796.0" style="-fx-background-color: F5F5F5;">
+               <columns>
+                  <TableColumn fx:id="detailIdCol" prefWidth="39.666664123535156" text="Id" />
+                  <TableColumn fx:id="detailNameCol" prefWidth="174.6666717529297" text="Họ và tên" />
+                  <TableColumn fx:id="monthCol" prefWidth="129.33334350585938" text="Tháng" />
+                  <TableColumn fx:id="lessonQtyCol" prefWidth="100.66668701171875" text="Số buổi" />
+                  <TableColumn fx:id="monthSalaryCol" minWidth="0.0" prefWidth="125.6666259765625" text="Lương tháng" />
+                  <TableColumn fx:id="detailStatusCol" minWidth="0.0" prefWidth="118.6666259765625" text="Trạng thái" />
+                  <TableColumn fx:id="updateSalarySttCol" minWidth="0.0" prefWidth="268.3333740234375" />
+               </columns>
+            </TableView>
+         </children>
+      </StackPane>
    </children>
 </AnchorPane>

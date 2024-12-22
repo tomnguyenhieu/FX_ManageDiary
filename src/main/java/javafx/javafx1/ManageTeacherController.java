@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package javafx.javafx1;
 
 import java.net.URL;
@@ -26,40 +22,38 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Callback;
 
-/**
- *
- * @author Admin
- */
 public class ManageTeacherController extends App implements Initializable {
-    Teacher teacher = null;
+    Person teacher = null;
     Accounts acc = new Accounts();
     double orgSceneX, orgSceneY, orgTranslateX, orgTranslateY;
+
     @FXML
-    private TableView<Teacher> teachersTable;
+    private TableView<Person> teachersTable;
+    @FXML
+    private TableColumn<Person, String> idCol;
+    @FXML
+    private TableColumn<Person, String> nameCol;
+    @FXML
+    private TableColumn<Person, String> ageCol;
+    @FXML
+    private TableColumn<Person, String> genderCol;
+    @FXML
+    private TableColumn<Person, String> emailCol;
+    @FXML
+    private TableColumn<Person, String> passCol;
+    @FXML
+    private TableColumn<Person, String> phoneCol;
+    @FXML
+    private TableColumn<Person, String> addressCol;
+    @FXML
+    private TableColumn<Person, String> certificateCol;
+    @FXML
+    private TableColumn<Person, String> salaryCol;
+    @FXML
+    private TableColumn<Person, String> statusCol;
+
     @FXML
     private TableView<Bill> teacherDetailTable;
-    @FXML
-    private TableColumn<Teacher, String> idCol;
-    @FXML
-    private TableColumn<Teacher, String> nameCol;
-    @FXML
-    private TableColumn<Teacher, String> ageCol;
-    @FXML
-    private TableColumn<Teacher, String> genderCol;
-    @FXML
-    private TableColumn<Teacher, String> emailCol;
-    @FXML
-    private TableColumn<Teacher, String> passCol;
-    @FXML
-    private TableColumn<Teacher, String> phoneCol;
-    @FXML
-    private TableColumn<Teacher, String> addressCol;
-    @FXML
-    private TableColumn<Teacher, String> certificateCol;
-    @FXML
-    private TableColumn<Teacher, String> salaryCol;
-    @FXML
-    private TableColumn<Teacher, String> statusCol;
     @FXML
     private TableColumn<Bill, String> detailIdCol;
     @FXML
@@ -74,27 +68,35 @@ public class ManageTeacherController extends App implements Initializable {
     private TableColumn<Bill, String> detailStatusCol;
     @FXML
     private TableColumn<Bill, String> updateSalarySttCol;
-    
 
-    // Load table Teachers
+    @FXML
+    private StackPane detailPane;
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        refreshTableTeachers();
+        detailPane.setVisible(false); // Ẩn detailPane khi khởi tạo
+    }
+
+    // Làm mới bảng giáo viên
     @FXML
     public void refreshTableTeachers() {
-        final ObservableList<Teacher> TeacherList = FXCollections.observableArrayList();
+        final ObservableList<Person> TeacherList = FXCollections.observableArrayList();
         ResultSet rs = acc.getTeachersInfo(2);
-        try{
-            while(rs.next()) {
-                TeacherList.add(new Teacher(
-                    rs.getInt("id"),
-                    rs.getString("name"),
-                    rs.getInt("age"),
-                    rs.getString("gender"),
-                    rs.getString("email"),
-                    rs.getString("password"),
-                    rs.getString("phone"),
-                    rs.getString("address"),
-                    rs.getString("certificates"),
-                    rs.getInt("salary"),
-                    rs.getInt("status")
+        try {
+            while (rs.next()) {
+                TeacherList.add(new Person(
+                        rs.getInt("id"),
+                        rs.getString("name"),
+                        rs.getInt("age"),
+                        rs.getString("gender"),
+                        rs.getString("email"),
+                        rs.getString("password"),
+                        rs.getString("phone"),
+                        rs.getString("address"),
+                        rs.getString("certificates"),
+                        rs.getInt("salary"),
+                        rs.getString("status")
                 ));
             }
         } catch (Exception e) {
@@ -113,10 +115,121 @@ public class ManageTeacherController extends App implements Initializable {
         statusCol.setCellValueFactory(new PropertyValueFactory<>("status"));
 
         teachersTable.setItems(TeacherList);
-        System.out.println("refreshed!");
     }
 
-    // Add new Teacher
+    // Làm mới bảng chi tiết giáo viên
+    private void updateTeacherDetails(boolean isSelectionChange) {
+        if (teacher != null || isSelectionChange) {
+            if (isSelectionChange) {
+                teacher = teachersTable.getSelectionModel().getSelectedItem();
+            }
+
+            ObservableList<Bill> billList = FXCollections.observableArrayList();
+            ResultSet rs = acc.getTeacherInfoByAccountId(teacher.getId());
+
+            try {
+                while (rs.next()) {
+                    billList.add(new Bill(
+                            rs.getInt("bill_id"),
+                            teacher.getName(),
+                            rs.getString("month_taught"),
+                            rs.getInt("lessons_count"),
+                            rs.getInt("monthly_salary"),
+                            rs.getInt("salary_status") == 1 ? "Chưa trả" : "Đã trả"
+                    ));
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            detailIdCol.setCellValueFactory(new PropertyValueFactory<>("id"));
+            detailNameCol.setCellValueFactory(new PropertyValueFactory<>("bName"));
+            monthCol.setCellValueFactory(new PropertyValueFactory<>("month"));
+            lessonQtyCol.setCellValueFactory(new PropertyValueFactory<>("lessonQty"));
+            monthSalaryCol.setCellValueFactory(new PropertyValueFactory<>("monthlySalary"));
+            detailStatusCol.setCellValueFactory(new PropertyValueFactory<>("bStatus"));
+
+            Callback<TableColumn<Bill, String>, TableCell<Bill, String>> cellFactory = (TableColumn<Bill, String> param) -> {
+                final TableCell<Bill, String> cell = new TableCell<>() {
+                    @Override
+                    public void updateItem(String item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty) {
+                            setGraphic(null);
+                            setText(null);
+                        } else {
+                            Bill bill = getTableView().getItems().get(getIndex());
+                            if ("Đã trả".equals(bill.getBStatus())) {
+                                setGraphic(null);
+                                setText(null);
+                            } else {
+                                Label lb = new Label("Cập nhật");
+                                lb.setTextFill(Color.WHITE);
+
+                                HBox hbox = new HBox(lb);
+                                hbox.setMaxWidth(100);
+                                hbox.setStyle("-fx-alignment:center; -fx-cursor: hand; -fx-background-color:  #30475E; -fx-background-radius: 8;");
+                                hbox.setOnMouseClicked(event -> {
+                                    acc.updateSalaryStatus(bill.getId());
+                                    updateTeacherDetails(false);
+                                    System.out.println(bill.getId());
+                                });
+
+                                setGraphic(hbox);
+                                setText(null);
+                            }
+                        }
+                    }
+                };
+                return cell;
+            };
+            updateSalarySttCol.setCellFactory(cellFactory);
+
+            teacherDetailTable.setItems(billList);
+        }
+    }
+
+    // Sự kiện khi chọn một hàng trong bảng teachersTable
+
+    /**
+     *
+     * @param event
+     */
+
+    boolean firstClick = true;
+    @FXML
+    public void onTeacherSelected(MouseEvent event) {
+        teacher = teachersTable.getSelectionModel().getSelectedItem();
+        if (teacher != null) {
+            detailPane.setVisible(true); // Hiển thị detailPane
+            detailPane.setVisible(firstClick);
+            double posX = event.getX();
+            double posY = event.getY();
+
+            if(posX + 23 < 1080 - 526 && posY + 107 < 594-120){
+                detailPane.setLayoutX(posX + 30);
+                detailPane.setLayoutY(posY + 120);
+            } else if (posX + 23 >= 1080 - 526){
+                if(posY + 107 >= 594 -100){
+                    detailPane.setLayoutX(1080-526);
+                    detailPane.setLayoutY(594-100);
+                } else {
+                    detailPane.setLayoutX(1080-526);
+                    detailPane.setLayoutY(posY + 120);
+                }
+            } else{
+                detailPane.setLayoutX(posX + 40);
+                detailPane.setLayoutY(594 - 100);
+            }
+//            System.out.println(posX + " " + posY);
+            firstClick = !firstClick;
+            updateTeacherDetails(true); // Làm mới bảng teacherDetailTable
+        } else {
+            detailPane.setVisible(false); // Ẩn detailPane nếu không chọn hàng nào
+        }
+    }
+
+    // Thêm giáo viên mới
     @FXML
     public void onAddTeacherClick() {
         try {
@@ -131,26 +244,35 @@ public class ManageTeacherController extends App implements Initializable {
             stage.initStyle(StageStyle.TRANSPARENT);
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.show();
-            stage.setOnCloseRequest((event) -> {
-                refreshTableTeachers();
-            });
+            stage.setOnCloseRequest((event) -> refreshTableTeachers());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
+    // Chỉnh sửa thông tin giáo viên
+    @FXML
     public void onEditTeacherClick() {
-        // Lay thong tin teacher de hien len form
         teacher = teachersTable.getSelectionModel().getSelectedItem();
-        if(teacher != null) {
-            System.out.println(teacher.getName());
+        if (teacher != null) {
             try {
                 FXMLLoader loader = new FXMLLoader(App.class.getResource("addTeacher.fxml"));
                 Parent root = loader.load();
                 AddTeacherController addTeacherController = loader.getController();
-                addTeacherController.setTextField(teacher.getName(), teacher.getAge(), teacher.getGender(), teacher.getEmail(), teacher.getPassword(), teacher.getPhone(), teacher.getAddress(), teacher.getStatus(), teacher.getCertificate(), teacher.getSalary());
-                addTeacherController.setEdit(true);
                 addTeacherController.setTeacherId(teacher.getId());
+                addTeacherController.setTextField(
+                        teacher.getName(),
+                        teacher.getAge(),
+                        teacher.getGender(),
+                        teacher.getEmail(),
+                        teacher.getPassword(),
+                        teacher.getPhone(),
+                        teacher.getAddress(),
+                        teacher.getStatus(),
+                        teacher.getCertificate(),
+                        teacher.getSalary()
+                );
+                addTeacherController.setEdit(true);
 
                 Stage stage = new Stage();
                 Scene scene = new Scene(root);
@@ -158,25 +280,23 @@ public class ManageTeacherController extends App implements Initializable {
                 stage.initStyle(StageStyle.TRANSPARENT);
                 stage.initModality(Modality.APPLICATION_MODAL);
                 stage.show();
-                stage.setOnCloseRequest((event) -> {
-                    refreshTableTeachers();
-                });
+                stage.setOnCloseRequest((event) -> refreshTableTeachers());
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
-        }else {
-            // chua chon student
+        } else {
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setHeaderText(null);
             alert.setContentText("Chọn một giáo viên để sửa");
             alert.showAndWait();
         }
     }
-    
-    public void onDeleteTeacherClick(MouseEvent event){
-        // Lay id teacher va bo vao ham xoa
+
+    // Xóa giáo viên
+    @FXML
+    public void onDeleteTeacherClick(MouseEvent event) {
         teacher = teachersTable.getSelectionModel().getSelectedItem();
-        if(teacher != null){
+        if (teacher != null) {
             int teacherId = teacher.getId();
             acc.deleteTeacherById(teacherId);
             refreshTableTeachers();
@@ -184,7 +304,7 @@ public class ManageTeacherController extends App implements Initializable {
             alert.setHeaderText(null);
             alert.setContentText("Xóa giáo viên thành công");
             alert.showAndWait();
-        } else{
+        } else {
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setHeaderText(null);
             alert.setContentText("Chọn vào giáo viên để xóa!");
@@ -192,134 +312,31 @@ public class ManageTeacherController extends App implements Initializable {
         }
     }
 
-    private void refreshTeacherDetails() {
-        if (teacher != null) {
-            ObservableList<Bill> billList = FXCollections.observableArrayList();
-            ResultSet rs = acc.getTeacherInfoByAccountId(teacher.getId());
-            try {
-                while (rs.next()) {
-                    billList.add(new Bill(
-                            teacher.getId(),
-                            teacher.getName(),
-                            rs.getString("month_taught"),
-                            rs.getInt("lessons_count"),
-                            rs.getInt("monthly_salary"),
-                            rs.getInt("salary_status") == 1 ? "Đã trả" : "Chưa trả"
-                    ));
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            teacherDetailTable.setItems(billList);
-        }
-    }
-
-    public void onTeacherSelected () {
-        teacher = teachersTable.getSelectionModel().getSelectedItem();
-        // Lấy giáo viên được chọn từ bảng teachersTable
-        final ObservableList<Bill> BillList = FXCollections.observableArrayList();
-        Accounts acc = new Accounts();
-        ResultSet rs = acc.getTeacherInfoByAccountId(teacher.getId());
-
-        System.out.println(teacher.getId());
-        try{
-            while (rs.next()){
-                BillList.add(new Bill(
-                        teacher.getId(),
-                        teacher.getName(),
-                        rs.getString("month_taught"),
-                        rs.getInt("lessons_count"),
-                        rs.getInt("monthly_salary"),
-                        rs.getInt("salary_status") == 1 ? "Đã trả" : "Chưa trả"
-                ));
-
-                System.out.println(rs.getString("month_taught"));
-                System.out.println(rs.getInt("salary_status"));
-            }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-
-        detailIdCol.setCellValueFactory(new PropertyValueFactory<>("id"));
-        detailNameCol.setCellValueFactory(new PropertyValueFactory<>("bName"));
-        monthCol.setCellValueFactory(new PropertyValueFactory<>("month"));
-        lessonQtyCol.setCellValueFactory(new PropertyValueFactory<>("lessonQty"));
-        monthSalaryCol.setCellValueFactory(new PropertyValueFactory<>("monthlySalary"));
-        detailStatusCol.setCellValueFactory(new PropertyValueFactory<>("bStatus"));
-
-        Callback<TableColumn<Bill, String>, TableCell<Bill, String>> cellFactory = (TableColumn<Bill, String> param) -> {
-            final TableCell<Bill, String> cell = new TableCell<>() {
-                @Override
-                public void updateItem(String item, boolean empty) {
-                    super.updateItem(item, empty);
-                    if (empty) {
-                        setGraphic(null);
-                        setText(null);
-                    } else {
-                        Bill bill = getTableView().getItems().get(getIndex());
-                        if ("Đã trả".equals(bill.getBStatus())) {
-                            setGraphic(null); // Ẩn nút nếu trạng thái là "Đã trả"
-                            setText(null);
-                        } else {
-                            Label lb = new Label("Cập nhật");
-                            lb.setTextFill(Color.WHITE);
-
-                            HBox hbox = new HBox(lb);
-                            hbox.setMaxWidth(100);
-                            hbox.setStyle("-fx-alignment:center; -fx-cursor: hand; -fx-background-color:  #30475E; -fx-background-radius: 8;");
-                            hbox.setOnMouseClicked(event -> {
-                                // Cập nhật trạng thái trong database
-                                acc.updateSalaryStatus(bill.getId());
-                                // Làm mới bảng teacherDetailTable
-                                refreshTeacherDetails();
-                            });
-
-                            setGraphic(hbox);
-                            setText(null);
-                        }
-                    }
-                }
-            };
-            return cell;
-        };
-        updateSalarySttCol.setCellFactory(cellFactory);
-        teacherDetailTable.setItems(BillList);
-    }
-    
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        refreshTableTeachers();
-    }
-    
-    public void onMouseEnter(MouseEvent event){
-        HBox hbox = (HBox) event.getSource();
-        hbox.setEffect(new ColorAdjust(0,0,0,-0.2));
-    }
-    public void onMouseExit(MouseEvent event){
-        HBox hbox = (HBox) event.getSource();
-        hbox.setEffect(new ColorAdjust(0,0,0,0));
-    }
-
+    // Hiệu ứng nút (ví dụ: thay đổi kích thước khi nhấn vào)
+    @FXML
     public void onBtnAddPressed(MouseEvent event) {
         orgSceneX = event.getSceneX();
         orgSceneY = event.getSceneY();
-        StackPane stkPane = (StackPane)(event.getSource());
+        StackPane stkPane = (StackPane) event.getSource();
         stkPane.setScaleY(1.1);
         stkPane.setScaleX(1.1);
-        orgTranslateX = ((StackPane)(event.getSource())).getTranslateX();
-        orgTranslateY = ((StackPane)(event.getSource())).getTranslateY();
+        orgTranslateX = stkPane.getTranslateX();
+        orgTranslateY = stkPane.getTranslateY();
     }
+
+    @FXML
     public void onBtnAddDragged(MouseEvent event) {
         double offsetX = event.getSceneX() - orgSceneX;
         double offsetY = event.getSceneY() - orgSceneY;
         double newTranslateX = orgTranslateX + offsetX;
         double newTranslateY = orgTranslateY + offsetY;
-        ((StackPane)(event.getSource())).setTranslateX(newTranslateX);
-        ((StackPane)(event.getSource())).setTranslateY(newTranslateY);
+        ((StackPane) event.getSource()).setTranslateX(newTranslateX);
+        ((StackPane) event.getSource()).setTranslateY(newTranslateY);
     }
-    public void onBtnExit(MouseEvent event){
-        StackPane stkPane = (StackPane)(event.getSource());
+
+    @FXML
+    public void onBtnExit(MouseEvent event) {
+        StackPane stkPane = (StackPane) event.getSource();
         stkPane.setScaleY(1);
         stkPane.setScaleX(1);
     }

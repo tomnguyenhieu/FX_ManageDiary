@@ -79,6 +79,8 @@ public class ExportExcelController extends ManageClassController implements Init
             labelName.setCellValue("Tên");
             XSSFCell labelComment = labelRow.createCell(2);
             labelComment.setCellValue("Nhận xét");
+            XSSFCell labelScore = labelRow.createCell(3);
+            labelScore.setCellValue("Điểm số");
 
             for (int i = 0; i < arrayList.size(); i++)
             {
