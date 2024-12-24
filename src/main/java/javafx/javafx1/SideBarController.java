@@ -55,8 +55,9 @@ public class SideBarController extends App implements Initializable
         for (HBox item : listHboxs)
         {
             item.setStyle("-fx-background-color: #30475E;");
-            Label labelTest = (Label) item.getChildren().getFirst();
-            labelTest.setTextFill(Color.WHITE);
+//            Label labelTest = (Label) item.getChildren().getFirst();
+//            labelTest.setTextFill(Color.WHITE);
+            System.out.println(item.getChildren());
         }
 
     }
@@ -85,6 +86,9 @@ public class SideBarController extends App implements Initializable
                 break;
             case "dbStudentsBtn":
                 sceneName = "DashboardStudentScene";
+                break;
+            case "dbEarningBtn":
+                sceneName = "DashboardEarningScene";
                 break;
         }
         return sceneName;

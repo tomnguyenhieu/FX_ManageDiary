@@ -472,4 +472,47 @@ public class Files
             throw new RuntimeException(e);
         }
     }
+    public ResultSet getYears(int type)
+    {
+        String sql = "SELECT DISTINCT RIGHT(time, 4) AS year FROM bills "
+                + "WHERE time IS NOT NULL and type = " +type+ ";";
+        PreparedStatement ps;
+        try {
+            ps = connect.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            return rs;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public ResultSet getEarningByYear (int year, int type) {
+        String sql = "SELECT RIGHT(TIME, 4) AS year, LEFT(TIME, 2) AS month, "
+                + "SUM(total_price) AS monthlyEarning, "
+                + "SUM(SUM(total_price)) OVER (PARTITION BY RIGHT(TIME, 4)) AS yearlyEarning "
+                + "FROM bills "
+                + "WHERE status = 2 AND RIGHT(TIME, 4) = " + year + " AND TYPE = " + type + " "
+                + "GROUP BY RIGHT(TIME, 4), LEFT(TIME, 2) ORDER BY month";
+
+        PreparedStatement ps;
+        try {
+            ps = connect.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            return rs;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public ResultSet getTotalSpending (int year) {
+        String sql = "SELECT SUM(total_price) AS total_spending FROM bills "
+                + "WHERE STATUS = 2 AND TYPE != 4 AND RIGHT(time, 4) = " + year;
+        PreparedStatement ps;
+        try {
+            ps = connect.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            return rs;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

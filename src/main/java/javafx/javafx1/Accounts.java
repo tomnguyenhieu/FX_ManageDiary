@@ -275,11 +275,10 @@ public class Accounts
     }
 
     public void updateSalaryStatus(int billId) {
-        String sql = "UPDATE bills SET status = 1 WHERE id = " + billId;
+        String sql = "UPDATE bills SET status = 2 WHERE id = " + billId;
         try {
             PreparedStatement ps = connect.prepareStatement(sql);
-            ps.setInt(1, billId);
-            ps.executeUpdate();
+            ps.execute();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

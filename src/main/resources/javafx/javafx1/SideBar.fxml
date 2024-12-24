@@ -12,6 +12,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javafx.javafx1.SideBarController">
    <left>
@@ -40,7 +41,7 @@
                      <content>
                         <VBox fx:id="sbContainer" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="269.0" spacing="20.0">
                            <children>
-                              <TitledPane alignment="CENTER" expanded="false" prefWidth="238.0" text="Thống kê">
+                              <TitledPane alignment="CENTER" prefWidth="238.0" text="Thống kê">
                                  <content>
                                     <VBox fx:id="tiledPaneContainer" prefWidth="100.0" spacing="12.0" style="-fx-background-color: #30475E;">
                                        <children>
@@ -74,7 +75,7 @@
                                                 </Label>
                                              </children>
                                           </HBox>
-                                          <HBox fx:id="titledPaneChild11" layoutX="29.0" layoutY="29.0" maxHeight="55.0" minHeight="55.0" onMouseClicked="#onMouseClickGetTitledPaneChildren" prefHeight="55.0" prefWidth="180.0" style="-fx-background-radius: 5;">
+                                          <HBox fx:id="dbEarningBtn" layoutX="29.0" layoutY="29.0" maxHeight="55.0" minHeight="55.0" onMouseClicked="#onMouseClickGetTitledPaneChildren" prefHeight="55.0" prefWidth="180.0" style="-fx-background-radius: 5;">
                                              <cursor>
                                                 <Cursor fx:constant="HAND" />
                                              </cursor>
@@ -116,12 +117,17 @@
                               </TitledPane>
                               <HBox fx:id="classBtn" layoutX="26.0" layoutY="26.0" maxHeight="55.0" minHeight="55.0" onMouseClicked="#onMouseClickSetActivate" prefHeight="55.0" prefWidth="180.0" style="-fx-background-radius: 5;">
                                  <children>
-                                    <Label prefHeight="73.0" prefWidth="280.0" text="Lớp học" textFill="WHITE">
+                                    <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="55.0" prefWidth="165.0">
+                                       <children>
+                                          <FontIcon iconColor="WHITE" iconLiteral="fas-chalkboard" iconSize="24" layoutX="16.0" layoutY="37.0" />
+                                       </children>
+                                    </AnchorPane>
+                                    <Label prefHeight="55.0" prefWidth="280.0" text="Lớp học" textFill="WHITE">
                                        <font>
                                           <Font size="22.0" />
                                        </font>
                                        <HBox.margin>
-                                          <Insets left="12.0" />
+                                          <Insets />
                                        </HBox.margin>
                                     </Label>
                                  </children>
@@ -137,12 +143,17 @@
                                     <Cursor fx:constant="HAND" />
                                  </cursor>
                                  <children>
+                                    <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="55.0" prefWidth="165.0">
+                                       <children>
+                                          <FontIcon iconColor="WHITE" iconLiteral="fas-chalkboard-teacher" iconSize="24" layoutX="16.0" layoutY="37.0" />
+                                       </children>
+                                    </AnchorPane>
                                     <Label prefHeight="73.0" prefWidth="280.0" text="Giáo viên" textFill="WHITE">
                                        <font>
                                           <Font size="22.0" />
                                        </font>
                                        <HBox.margin>
-                                          <Insets left="12.0" />
+                                          <Insets />
                                        </HBox.margin>
                                     </Label>
                                  </children>
@@ -152,12 +163,17 @@
                                     <Cursor fx:constant="HAND" />
                                  </cursor>
                                  <children>
+                                    <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="55.0" prefWidth="165.0">
+                                       <children>
+                                          <FontIcon iconColor="WHITE" iconLiteral="fas-female" iconSize="30" layoutX="23.0" layoutY="38.0" />
+                                       </children>
+                                    </AnchorPane>
                                     <Label prefHeight="73.0" prefWidth="280.0" text="Nhân viên" textFill="WHITE">
                                        <font>
                                           <Font size="22.0" />
                                        </font>
                                        <HBox.margin>
-                                          <Insets left="12.0" />
+                                          <Insets />
                                        </HBox.margin>
                                     </Label>
                                  </children>
@@ -167,12 +183,17 @@
                                     <Cursor fx:constant="HAND" />
                                  </cursor>
                                  <children>
+                                    <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="55.0" prefWidth="165.0">
+                                       <children>
+                                          <FontIcon iconColor="WHITE" iconLiteral="fas-graduation-cap" iconSize="26" layoutX="14.0" layoutY="37.0" />
+                                       </children>
+                                    </AnchorPane>
                                     <Label prefHeight="73.0" prefWidth="280.0" text="Học viên" textFill="WHITE">
                                        <font>
                                           <Font size="22.0" />
                                        </font>
                                        <HBox.margin>
-                                          <Insets left="12.0" />
+                                          <Insets />
                                        </HBox.margin>
                                     </Label>
                                  </children>
@@ -182,12 +203,17 @@
                                     <Cursor fx:constant="HAND" />
                                  </cursor>
                                  <children>
+                                    <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="55.0" prefWidth="165.0">
+                                       <children>
+                                          <FontIcon iconColor="WHITE" iconLiteral="fas-calendar" iconSize="26" layoutX="19.0" layoutY="37.0" />
+                                       </children>
+                                    </AnchorPane>
                                     <Label prefHeight="73.0" prefWidth="280.0" text="Lịch học &amp; Phòng học" textFill="WHITE">
                                        <font>
                                           <Font size="22.0" />
                                        </font>
                                        <HBox.margin>
-                                          <Insets left="12.0" />
+                                          <Insets />
                                        </HBox.margin>
                                     </Label>
                                  </children>

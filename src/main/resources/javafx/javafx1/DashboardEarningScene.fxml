@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javafx.javafx1.DBEarningController">
+   <children>
+      <VBox prefHeight="720.0" prefWidth="1000.0" spacing="20.0">
+         <padding>
+            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+         </padding>
+         <children>
+            <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+               <children>
+                  <ComboBox fx:id="selectYearCB" onAction="#onActionSelectYear" prefHeight="50.0" prefWidth="150.0" />
+                  <Label contentDisplay="CENTER" prefHeight="41.0" prefWidth="102.0" text="Chọn năm">
+                     <font>
+                        <Font size="21.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
+            <BarChart fx:id="earningByYearChart">
+              <xAxis>
+                <CategoryAxis side="BOTTOM" fx:id="xAxis" />
+              </xAxis>
+              <yAxis>
+                <NumberAxis fx:id="yAxis" side="LEFT" />
+              </yAxis>
+            </BarChart>
+            <HBox prefHeight="124.0" prefWidth="960.0" style="-fx-background-color: #30475E;">
+               <children>
+                  <VBox prefHeight="131.0" prefWidth="259.0">
+                     <children>
+                        <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="46.0" prefWidth="259.0" text="Tổng thu học phí:" textFill="WHITE">
+                           <font>
+                              <Font size="21.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="totalEarningLb" alignment="CENTER" prefHeight="69.0" prefWidth="265.0" text="0" textFill="WHITE">
+                           <font>
+                              <Font size="37.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </VBox>
+                  <Line endX="-100.0" endY="100.0" startX="-100.0" stroke="WHITE">
+                     <HBox.margin>
+                        <Insets bottom="10.0" top="10.0" />
+                     </HBox.margin>
+                  </Line>
+                  <VBox prefHeight="131.0" prefWidth="259.0">
+                     <children>
+                        <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="46.0" prefWidth="259.0" text="Doanh thu trung bình:" textFill="WHITE">
+                           <font>
+                              <Font size="21.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="avgEarningLb" alignment="CENTER" prefHeight="69.0" prefWidth="265.0" text="0" textFill="WHITE">
+                           <font>
+                              <Font size="37.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </VBox>
+                  <Line endX="-100.0" endY="100.0" startX="-100.0" stroke="WHITE">
+                     <HBox.margin>
+                        <Insets bottom="10.0" top="10.0" />
+                     </HBox.margin>
+                  </Line>
+                  <VBox prefHeight="131.0" prefWidth="259.0">
+                     <children>
+                        <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="46.0" prefWidth="259.0" text="Tổng lãi:" textFill="WHITE">
+                           <font>
+                              <Font size="21.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="totalInterestLb" alignment="CENTER" prefHeight="69.0" prefWidth="265.0" text="0" textFill="WHITE">
+                           <font>
+                              <Font size="37.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </VBox>
+                  <Line endX="-100.0" endY="100.0" startX="-100.0" stroke="WHITE">
+                     <HBox.margin>
+                        <Insets bottom="10.0" top="10.0" />
+                     </HBox.margin>
+                  </Line>
+                  <VBox prefHeight="131.0" prefWidth="259.0">
+                     <children>
+                        <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="46.0" prefWidth="259.0" text="Tăng:" textFill="WHITE">
+                           <font>
+                              <Font size="21.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="increaseLb" alignment="CENTER" prefHeight="69.0" prefWidth="265.0" text="0" textFill="WHITE">
+                           <font>
+                              <Font size="37.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>
